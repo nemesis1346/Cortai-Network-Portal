@@ -64,9 +64,15 @@ persists to `localStorage` and honors `prefers-color-scheme` on first visit.
 
 ## Deploy
 
-Static build → S3 (private) + CloudFront (OAC). See `deploy/README.md` — **nothing
-there has been run against a real AWS account**; it's prepared artifacts (Terraform,
-a deploy script, and a manual-only GitHub Actions workflow) for a later, deliberate run.
+`deploy/scripts/deploy-ec2.sh` builds and rsyncs `dist/` over SSH to an existing Ubuntu
+EC2 instance running nginx. Reads `EC2_HOST`/`EC2_KEY`/`EC2_USER` from the root `.env`
+(see `.env.example`). Safe to re-run — every step is idempotent.
+
+```bash
+bash deploy/scripts/deploy-ec2.sh
+```
+
+No TLS/domain is set up — HTTP only for now.
 
 ## Out of scope for Module 1
 
