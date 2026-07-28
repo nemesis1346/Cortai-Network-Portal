@@ -1,0 +1,327 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =====================================================
+   NOCTURNE — dark theme (default)
+   Ported 1:1 from cortai-network-topology.html (lines 11-32)
+===================================================== */
+:root {
+  --bg: #0a1114;
+  --panel: #0f1a1e;
+  --panel-2: #132227;
+  --line: #1e3138;
+  --line-2: #2a444e;
+  --text: #dce8ea;
+  --text-2: #8aa3a9;
+  --text-3: #5c7378;
+  --wired: #2dd4a7;
+  --wired-dim: #1a6e58;
+  --wireless: #8b7cf6;
+  --wireless-dim: #4a4090;
+  --iot: #e0a458;
+  --iot-dim: #7d5c31;
+  --danger: #f0564a;
+  --danger-bg: #2a1512;
+  --ok: #2dd4a7;
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Inter', sans-serif;
+  --disp: 'Space Grotesk', sans-serif;
+}
+
+/* =====================================================
+   ARCTIC — light theme (toggle)
+   Ported 1:1 from cortai-network-topology.html (lines 623-632)
+===================================================== */
+body.light {
+  --bg: #f2f5f7;
+  --panel: #ffffff;
+  --panel-2: #f5f8f9;
+  --line: #e3e9ec;
+  --line-2: #ccd7dc;
+  --text: #16232d;
+  --text-2: #4a5a64;
+  --text-3: #7f8d96;
+  --wired: #0e9f7f;
+  --wired-dim: #8fd6c4;
+  --wireless: #6d5fd8;
+  --wireless-dim: #b9b0ef;
+  --iot: #b8741a;
+  --iot-dim: #e2c092;
+  --danger: #d84438;
+  --danger-bg: #fdf1f0;
+  --ok: #0e9f7f;
+}
+
+body.light .card {
+  box-shadow: 0 1px 3px rgba(22, 35, 45, 0.05);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.mono-num {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- card ---------- */
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px 18px;
+  min-width: 0;
+}
+.card h3 {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-3);
+  font-weight: 600;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ---------- tag pill / count pill ---------- */
+.tagpill {
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: rgba(45, 212, 167, 0.12);
+  color: var(--ok);
+}
+
+/* ---------- buttons ---------- */
+.btn {
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 7px;
+  border: 1px solid var(--line-2);
+  background: var(--panel-2);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.btn:hover {
+  border-color: var(--text-2);
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn.primary {
+  background: var(--wired);
+  border-color: var(--wired);
+  color: #04241b;
+}
+.btn.primary:hover {
+  background: #3fe6b8;
+}
+.btn.danger {
+  border-color: #5c2b26;
+  color: #f3a49d;
+}
+.btn.danger:hover {
+  border-color: var(--danger);
+}
+
+/* ---------- key/value grid (used in drawers) ---------- */
+.kv {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.kv .cell {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.kv .k {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  margin-bottom: 4px;
+}
+.kv .v {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text);
+}
+.kv .v.bad {
+  color: var(--danger);
+}
+.kv .v.good {
+  color: var(--ok);
+}
+
+/* ---------- form fields ---------- */
+.fld {
+  margin-bottom: 11px;
+}
+.fld label {
+  display: block;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+.fld input,
+.fld select {
+  width: 100%;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text);
+  background: var(--panel-2);
+  border: 1px solid var(--line-2);
+  border-radius: 8px;
+  padding: 9px 12px;
+  outline: none;
+}
+.fld input:focus,
+.fld select:focus {
+  border-color: var(--wired);
+}
+.fld2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* ---------- advisory / guardian note ---------- */
+.gsug {
+  background: linear-gradient(125deg, rgba(45, 212, 167, 0.07), rgba(139, 124, 246, 0.06));
+  border: 1px solid rgba(45, 212, 167, 0.3);
+  border-radius: 10px;
+  padding: 11px 14px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-2);
+  margin-bottom: 14px;
+}
+.gsug b {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* ---------- overlay / drawer ---------- */
+.ov {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 9, 11, 0.7);
+  backdrop-filter: blur(3px);
+  z-index: 60;
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 7vh 20px 20px;
+}
+.ov.open {
+  display: flex;
+}
+body.light .ov {
+  background: rgba(22, 35, 45, 0.35);
+}
+
+.regm {
+  width: 560px;
+  max-width: 100%;
+  background: var(--panel);
+  border: 1px solid var(--line-2);
+  border-radius: 16px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+  max-height: 86vh;
+  display: flex;
+  flex-direction: column;
+}
+body.light .regm {
+  box-shadow: 0 24px 80px rgba(22, 35, 45, 0.25);
+}
+.regm-head {
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.regm-head .ttl {
+  font-family: var(--disp);
+  font-size: 16px;
+  font-weight: 600;
+}
+.regm-head .sub {
+  font-size: 11.5px;
+  color: var(--text-3);
+  margin-top: 2px;
+}
+.regm-body {
+  padding: 16px 20px 20px;
+  overflow-y: auto;
+}
+.regm-body .kv {
+  margin-bottom: 14px;
+}
+
+/* ---------- toast ---------- */
+.toast {
+  position: fixed;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--panel-2);
+  border: 1px solid var(--line-2);
+  color: var(--text);
+  padding: 11px 18px;
+  border-radius: 9px;
+  font-size: 13px;
+  transition: transform 0.3s;
+  z-index: 99;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    transition: opacity 0.15s;
+    transform: translateX(-50%) translateY(0);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .toast.show {
+    opacity: 1;
+  }
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

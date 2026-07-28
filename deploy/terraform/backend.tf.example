@@ -1,0 +1,12 @@
+# Example only — not active. Rename to backend.tf and fill in a real bucket/table
+# once one exists, so `terraform plan`/`apply` state isn't just local.
+#
+# terraform {
+#   backend "s3" {
+#     bucket         = "cortai-network-portal-tfstate"
+#     key            = "network-portal/terraform.tfstate"
+#     region         = "ca-central-1"
+#     dynamodb_table = "cortai-network-portal-tflock"
+#     encrypt        = true
+#   }
+# }
