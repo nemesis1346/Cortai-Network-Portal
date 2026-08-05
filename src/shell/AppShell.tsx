@@ -1,6 +1,7 @@
 import { useState, type ComponentType } from 'react'
 import { EmptyState } from '@/components/ui'
 import { CommandCenter } from '@/pages/command-center/CommandCenter'
+import { Controls } from '@/pages/controls/Controls'
 import { DevicesAwaitingTable } from '@/pages/devices-awaiting/DevicesAwaitingTable'
 import { NAV_TABS, type ScreenProps } from './nav-data'
 import { NavBar } from './NavBar'
@@ -9,6 +10,7 @@ import { TopBar } from './TopBar'
 const SCREENS: Record<string, ComponentType<ScreenProps>> = {
   'devices-awaiting': DevicesAwaitingTable,
   'command-center': CommandCenter,
+  controls: Controls,
 }
 
 export function AppShell() {
