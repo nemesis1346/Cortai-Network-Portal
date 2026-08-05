@@ -10,6 +10,7 @@ import {
   type TableColumn,
 } from '@/components/ui'
 import { deviceApi, VLAN_LABEL, type Device, type DeviceStatus } from '@/api'
+import type { ScreenProps } from '@/shell/nav-data'
 import { ApproveDrawer, type DrawerMode } from './ApproveDrawer'
 import { connectionLabel, formatFirstSeen } from './deviceDisplay'
 import './devices-awaiting.css'
@@ -28,7 +29,7 @@ const EMPTY_COPY: Record<DeviceStatus, { icon: string; title: string; sub?: stri
   blocked: { icon: '⛔', title: 'Nothing blocked right now.' },
 }
 
-export function DevicesAwaitingTable() {
+export function DevicesAwaitingTable(_props: ScreenProps) {
   const [allDevices, setAllDevices] = useState<Device[] | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [activeStatus, setActiveStatus] = useState<DeviceStatus>('awaiting')

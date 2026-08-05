@@ -76,7 +76,8 @@ No TLS/domain is set up — HTTP only for now.
 
 ## Out of scope for Module 1
 
-Everything else — Command Center, Security, Insights, WAN Health, Controls, Report,
-plus device-detail drill-down, health score, staff activity, app-health, self-help
-tiers, insights map — is stubbed as "coming soon", never broken, per the scope doc's
-explicit instruction not to over-build.
+The other 6 nav tabs — Command Center, Security, Insights, WAN Health, Controls, Report —
+are stubbed as "coming soon", never broken, per the scope doc's explicit instruction not
+to over-build. Device-detail drill-down, health score, staff activity, app-health,
+self-help tiers, and insights map are deferred to later modules and not present yet,
+even as a stub — the scope doc marks device detail optional for the Module 1 demo.

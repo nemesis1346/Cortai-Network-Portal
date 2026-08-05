@@ -1,16 +1,18 @@
 import { useState, type ComponentType } from 'react'
 import { EmptyState } from '@/components/ui'
+import { CommandCenter } from '@/pages/command-center/CommandCenter'
 import { DevicesAwaitingTable } from '@/pages/devices-awaiting/DevicesAwaitingTable'
-import { NAV_TABS } from './nav-data'
+import { NAV_TABS, type ScreenProps } from './nav-data'
 import { NavBar } from './NavBar'
 import { TopBar } from './TopBar'
 
-const SCREENS: Record<string, ComponentType> = {
+const SCREENS: Record<string, ComponentType<ScreenProps>> = {
   'devices-awaiting': DevicesAwaitingTable,
+  'command-center': CommandCenter,
 }
 
 export function AppShell() {
-  const [activeTab, setActiveTab] = useState<string>('network')
+  const [activeTab, setActiveTab] = useState<string>('command-center')
 
   const tab = NAV_TABS.find((t) => t.key === activeTab) ?? NAV_TABS[0]
   const Screen = tab.screen ? SCREENS[tab.screen] : undefined
@@ -21,7 +23,7 @@ export function AppShell() {
       <NavBar active={activeTab} onNavigate={setActiveTab} />
       <main style={{ flex: 1, padding: 24 }}>
         {Screen ? (
-          <Screen />
+          <Screen onNavigate={setActiveTab} />
         ) : (
           <EmptyState
             icon="⏳"
