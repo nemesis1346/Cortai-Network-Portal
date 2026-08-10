@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useToast } from '@/components/ui'
 import { controlsApi, deviceApi, type Device } from '@/api'
 import { displayName } from '@/pages/devices-awaiting/deviceDisplay'
+import { useActionLauncher } from '@/shell/ActionLauncherContext'
 
 interface BlockAndPauseCardProps {
   onChanged: () => void
@@ -17,6 +18,8 @@ export function BlockAndPauseCard({ onChanged }: BlockAndPauseCardProps) {
   const [devices, setDevices] = useState<Device[] | null>(null)
   const [selectedMac, setSelectedMac] = useState('')
   const { show: showToast } = useToast()
+  const domainInputRef = useRef<HTMLInputElement>(null)
+  const { focusBlockInputRequested, consumeFocusBlockInput } = useActionLauncher()
 
   useEffect(() => {
     controlsApi.listBlockedDomains().then(setDomains)
@@ -25,6 +28,13 @@ export function BlockAndPauseCard({ onChanged }: BlockAndPauseCardProps) {
       setSelectedMac(rows[0]?.mac ?? '')
     })
   }, [])
+
+  // Action Launcher's "Block a website" action lands here and just needs the input focused.
+  useEffect(() => {
+    if (!focusBlockInputRequested) return
+    domainInputRef.current?.focus()
+    consumeFocusBlockInput()
+  }, [focusBlockInputRequested, consumeFocusBlockInput])
 
   const block = () => {
     const v = domainInput.trim().toLowerCase()
@@ -62,6 +72,7 @@ export function BlockAndPauseCard({ onChanged }: BlockAndPauseCardProps) {
       <h3>Block a website</h3>
       <div className="blk-input">
         <input
+          ref={domainInputRef}
           placeholder="e.g. bet365.com"
           value={domainInput}
           onChange={(e) => setDomainInput(e.target.value)}

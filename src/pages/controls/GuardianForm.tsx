@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { useActionLauncher } from '@/shell/ActionLauncherContext'
 
 interface Suggestion {
   label: string
@@ -26,6 +27,21 @@ interface GuardianFormProps {
 
 export function GuardianForm({ onTriage, onEmpty, submitting }: GuardianFormProps) {
   const [text, setText] = useState('')
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const { guardianPrefill, consumeGuardianPrefill } = useActionLauncher()
+
+  // Action Launcher's "crFrom"-equivalent actions land here — pre-fill only, never auto-submit
+  // (that distinction matters: the prefix is incomplete, e.g. "New device to add: ").
+  useEffect(() => {
+    if (guardianPrefill === null) return
+    setText(guardianPrefill)
+    consumeGuardianPrefill()
+    const el = textareaRef.current
+    if (el) {
+      el.focus()
+      el.setSelectionRange(guardianPrefill.length, guardianPrefill.length)
+    }
+  }, [guardianPrefill, consumeGuardianPrefill])
 
   const submit = (value: string) => {
     const v = value.trim()
@@ -44,6 +60,7 @@ export function GuardianForm({ onTriage, onEmpty, submitting }: GuardianFormProp
   return (
     <>
       <textarea
+        ref={textareaRef}
         className="cr"
         value={text}
         onChange={(e) => setText(e.target.value)}
