@@ -1,12 +1,5 @@
-import type {
-  ActivityEvent,
-  ActivityEventKind,
-  AttentionItem,
-  BriefingGreeting,
-  HomeApi,
-  HomeHealth,
-  HomeKpis,
-} from './homeTypes'
+import type { AttentionItem, BriefingGreeting, HomeApi, HomeHealth, HomeKpis } from './homeTypes'
+import { subscribeToActivityFeed } from './mockActivityFeed'
 
 const NETWORK_DELAY_MS = 280
 
@@ -87,20 +80,6 @@ const SEED_ATTENTION: AttentionItem[] = [
   },
 ]
 
-/** Ported verbatim from cortai-network-topology.html's FEED_POOL. */
-const SEED_FEED_POOL: [ActivityEventKind, string][] = [
-  ['blk', '<b>Log4Shell scan</b> from <span class="mono">185.220.101.44</span> (RU) → WAN. Signature matched, dropped.'],
-  ['blk', 'SSH password spray from <span class="mono">43.155.68.9</span> (CN) — <b>62 attempts</b>, source banned.'],
-  ['blk', 'DT-02 tried to open <span class="mono">micros0ft-billing.top</span> — <b>credential phishing</b>, page never loaded.'],
-  ['qtn', 'Email attachment <span class="mono">invoice_(2).xlsm</span> detonated in sandbox — <b>macro dropper</b> detected.'],
-  ['blk', 'CAM-02 firmware attempted contact with known C2 <span class="mono">91.243.44.12</span> — <b>blocked by IoT policy</b>.'],
-  ['blk', 'Sequential scan of 1,024 ports from <span class="mono">167.94.138.60</span> — fingerprinted as Censys, rate-limited.'],
-  ['alw', 'Windows Update on LT-04 — publisher signature valid, allowed.'],
-  ['blk', 'LT-07 blocked from <b>malvertising redirect</b> on a news site (<span class="mono">adclick-cdn.ru</span>).'],
-  ['blk', 'Anomalous TXT query volume from guest device — <b>DNS exfil pattern</b>, killed.'],
-  ['qtn', 'Unknown MAC on port 15 placed in <b>quarantine VLAN</b> pending approval.'],
-]
-
 function greetingFor(hour: number): BriefingGreeting {
   if (hour < 12) return 'morning'
   if (hour < 18) return 'afternoon'
@@ -122,8 +101,6 @@ function buildNarrative(now: Date): string {
     `Everything else — internet, Wi-Fi, door access, POS — is healthy, and traffic looks normal for a ${day}.`
   )
 }
-
-let activityCounter = 0
 
 export const mockHomeApi: HomeApi = {
   async getBriefing() {
@@ -153,17 +130,7 @@ export const mockHomeApi: HomeApi = {
     return delay(SEED_ATTENTION.map((a) => ({ ...a })))
   },
 
-  subscribeActivity(onEvent: (event: ActivityEvent) => void) {
-    const id = setInterval(() => {
-      const [kind, message_html] = SEED_FEED_POOL[Math.floor(Math.random() * SEED_FEED_POOL.length)]
-      activityCounter += 1
-      onEvent({
-        id: `evt-${Date.now()}-${activityCounter}`,
-        kind,
-        message_html,
-        at: new Date().toISOString(),
-      })
-    }, 7000)
-    return () => clearInterval(id)
+  subscribeActivity(onEvent) {
+    return subscribeToActivityFeed(onEvent, 7000)
   },
 }
