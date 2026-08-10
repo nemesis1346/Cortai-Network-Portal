@@ -139,6 +139,7 @@ const CONTROLS_MUTATING_METHODS = [
   'unblockDomain',
   'pauseDevice',
   'reverseChange',
+  'logContainment',
 ]
 const OUTCOME_WORDS = /\b(Approved|Blocked|Quarantined|placed on|banned network-wide)\b/i
 

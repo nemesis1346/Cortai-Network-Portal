@@ -720,6 +720,23 @@ export const mockControlsApi: ControlsApi = {
     })
     return delay({ ...rec })
   },
+
+  async logContainment(input) {
+    const rec = addCr({
+      tier: 1,
+      badge: 'ai',
+      title: input.title,
+      executor: 'AI Guardian (autonomous containment)',
+      approved: '— (Tier 1: containment)',
+      rationale: input.rationale,
+      snapshot: '— (containment: nothing to roll back)',
+      steps: input.steps,
+      verify: input.verify,
+      reversible: false,
+      revNote: 'Containment actions are lifted by the engineer after the physical check — not reversed from the portal.',
+    })
+    return delay(rec)
+  },
 }
 
 /** Test-only: reseed mock state between test runs. */

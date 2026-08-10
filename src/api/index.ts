@@ -1,12 +1,15 @@
 import type { DeviceApi } from './types'
 import type { HomeApi } from './homeTypes'
 import type { ControlsApi } from './controlsTypes'
+import type { SecurityApi } from './securityTypes'
 import { mockDeviceApi } from './mockDeviceApi'
 import { realDeviceApi } from './realDeviceApi'
 import { mockHomeApi } from './mockHomeApi'
 import { realHomeApi } from './realHomeApi'
 import { mockControlsApi } from './mockControlsApi'
 import { realControlsApi } from './realControlsApi'
+import { mockSecurityApi } from './mockSecurityApi'
+import { realSecurityApi } from './realSecurityApi'
 
 /**
  * THE ONE FILE to change when Stefan's CoreTi/FortiManager backend is ready:
@@ -21,6 +24,10 @@ export const homeApi: HomeApi =
 export const controlsApi: ControlsApi =
   import.meta.env.VITE_API_MODE === 'real' ? realControlsApi : mockControlsApi
 
+export const securityApi: SecurityApi =
+  import.meta.env.VITE_API_MODE === 'real' ? realSecurityApi : mockSecurityApi
+
 export * from './types'
 export * from './homeTypes'
 export * from './controlsTypes'
+export * from './securityTypes'

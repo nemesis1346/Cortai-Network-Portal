@@ -85,6 +85,13 @@ export interface ControlsApi {
 
   listChanges(): Promise<ChangeRecord[]>
   reverseChange(num: number): Promise<ChangeRecord>
+
+  /**
+   * Generic autonomous-containment journal entry — used by modules other than
+   * Controls itself (e.g. Security's attack simulation) that need to log into the
+   * same change journal without going through the Guardian triage flow.
+   */
+  logContainment(input: { title: string; rationale: string; steps: ChangeStep[]; verify: string[] }): Promise<ChangeRecord>
 }
 
 export const TIER_LABEL: Record<GuardTier, string> = {

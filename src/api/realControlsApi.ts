@@ -97,4 +97,11 @@ export const realControlsApi: ControlsApi = {
   reverseChange(num) {
     return request<ChangeRecord>(`/api/v1/changes/${num}/reverse`, { method: 'POST' })
   },
+
+  logContainment(input) {
+    return request<ChangeRecord>(`/api/v1/sites/${SITE_ID}/changes`, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'log-containment', ...input }),
+    })
+  },
 }
