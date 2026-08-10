@@ -1,5 +1,5 @@
 import type { HomeHealth } from '@/api'
-import { useCountUp } from './useCountUp'
+import { useCountUp } from '@/hooks/useCountUp'
 
 const RING_CIRCUMFERENCE = 402
 

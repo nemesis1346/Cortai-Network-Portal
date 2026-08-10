@@ -1,5 +1,5 @@
 import type { HomeKpis } from '@/api'
-import { useCountUp } from './useCountUp'
+import { useCountUp } from '@/hooks/useCountUp'
 
 interface ImpactBannerProps {
   kpis: HomeKpis | null

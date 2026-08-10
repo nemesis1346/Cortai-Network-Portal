@@ -1,6 +1,6 @@
 import type { ChangeRecord, TriageResult } from '@/api'
 import { stepMark } from './controlsDisplay'
-import { useStepRunner } from './useStepRunner'
+import { useStepRunner } from '@/hooks/useStepRunner'
 
 interface GuardianReplyCardProps {
   triage: TriageResult
