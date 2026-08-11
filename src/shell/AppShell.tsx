@@ -5,6 +5,7 @@ import { Controls } from '@/pages/controls/Controls'
 import { DevicesAwaitingTable } from '@/pages/devices-awaiting/DevicesAwaitingTable'
 import { Insights } from '@/pages/insights/Insights'
 import { SecurityCenter } from '@/pages/security/SecurityCenter'
+import { WanHealth } from '@/pages/wan-health/WanHealth'
 import { ActionLauncher } from './action-launcher/ActionLauncher'
 import { NAV_TABS, type ScreenProps } from './nav-data'
 import { NavBar } from './NavBar'
@@ -16,6 +17,7 @@ const SCREENS: Record<string, ComponentType<ScreenProps>> = {
   controls: Controls,
   security: SecurityCenter,
   insights: Insights,
+  'wan-health': WanHealth,
 }
 
 export function AppShell() {
