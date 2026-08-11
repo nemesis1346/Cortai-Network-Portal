@@ -1,21 +1,10 @@
 import type { HeatmapCell, InsightsApi, InsightsData, TopDestination, TopTalker } from './insightsTypes'
+import { rng } from './seededRandom'
 
 const NETWORK_DELAY_MS = 280
 
 function delay<T>(value: T): Promise<T> {
   return new Promise((resolve) => setTimeout(() => resolve(value), NETWORK_DELAY_MS))
-}
-
-/** Ported verbatim from cortai-network-topology.html's rng() (line 1741) — xorshift PRNG. */
-function rng(seed: number): () => number {
-  let a = (seed * 2654435761) >>> 0
-  return () => {
-    a ^= a << 13
-    a ^= a >>> 17
-    a ^= a << 5
-    a >>>= 0
-    return a / 4294967296
-  }
 }
 
 /**
