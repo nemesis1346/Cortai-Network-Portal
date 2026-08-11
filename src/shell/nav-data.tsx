@@ -14,7 +14,7 @@ export const NAV_TABS: NavTabDef[] = [
   { key: 'command-center', label: 'Command Center', screen: 'command-center' },
   { key: 'network', label: 'Network', screen: 'devices-awaiting' },
   { key: 'security', label: 'Security', screen: 'security' },
-  { key: 'insights', label: 'Insights' },
+  { key: 'insights', label: 'Insights', screen: 'insights' },
   { key: 'wan-health', label: 'WAN Health' },
   { key: 'controls', label: 'Controls', screen: 'controls' },
   { key: 'report', label: 'Report' },

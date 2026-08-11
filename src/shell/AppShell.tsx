@@ -3,6 +3,7 @@ import { EmptyState } from '@/components/ui'
 import { CommandCenter } from '@/pages/command-center/CommandCenter'
 import { Controls } from '@/pages/controls/Controls'
 import { DevicesAwaitingTable } from '@/pages/devices-awaiting/DevicesAwaitingTable'
+import { Insights } from '@/pages/insights/Insights'
 import { SecurityCenter } from '@/pages/security/SecurityCenter'
 import { ActionLauncher } from './action-launcher/ActionLauncher'
 import { NAV_TABS, type ScreenProps } from './nav-data'
@@ -14,6 +15,7 @@ const SCREENS: Record<string, ComponentType<ScreenProps>> = {
   'command-center': CommandCenter,
   controls: Controls,
   security: SecurityCenter,
+  insights: Insights,
 }
 
 export function AppShell() {
