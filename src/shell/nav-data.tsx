@@ -17,5 +17,5 @@ export const NAV_TABS: NavTabDef[] = [
   { key: 'insights', label: 'Insights', screen: 'insights' },
   { key: 'wan-health', label: 'WAN Health', screen: 'wan-health' },
   { key: 'controls', label: 'Controls', screen: 'controls' },
-  { key: 'report', label: 'Report' },
+  { key: 'report', label: 'Report', screen: 'monthly-report' },
 ]

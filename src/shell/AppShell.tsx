@@ -4,6 +4,7 @@ import { CommandCenter } from '@/pages/command-center/CommandCenter'
 import { Controls } from '@/pages/controls/Controls'
 import { DevicesAwaitingTable } from '@/pages/devices-awaiting/DevicesAwaitingTable'
 import { Insights } from '@/pages/insights/Insights'
+import { MonthlyReport } from '@/pages/monthly-report/MonthlyReport'
 import { SecurityCenter } from '@/pages/security/SecurityCenter'
 import { WanHealth } from '@/pages/wan-health/WanHealth'
 import { ActionLauncher } from './action-launcher/ActionLauncher'
@@ -18,6 +19,7 @@ const SCREENS: Record<string, ComponentType<ScreenProps>> = {
   security: SecurityCenter,
   insights: Insights,
   'wan-health': WanHealth,
+  'monthly-report': MonthlyReport,
 }
 
 export function AppShell() {
