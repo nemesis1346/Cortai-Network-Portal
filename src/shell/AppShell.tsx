@@ -1,5 +1,6 @@
 import { useState, type ComponentType } from 'react'
 import { EmptyState } from '@/components/ui'
+import { IconSprite } from '@/components/ui-v2/IconSprite'
 import { CommandCenter } from '@/pages/command-center/CommandCenter'
 import { Controls } from '@/pages/controls/Controls'
 import { DevicesAwaitingTable } from '@/pages/devices-awaiting/DevicesAwaitingTable'
@@ -8,9 +9,14 @@ import { MonthlyReport } from '@/pages/monthly-report/MonthlyReport'
 import { SecurityCenter } from '@/pages/security/SecurityCenter'
 import { WanHealth } from '@/pages/wan-health/WanHealth'
 import { ActionLauncher } from './action-launcher/ActionLauncher'
+import { useActionLauncher } from './ActionLauncherContext'
+import { AlertsModal } from './AlertsModal'
+import { AppBar } from './AppBar'
+import { MobileNavbar } from './MobileNavbar'
 import { NAV_TABS, type ScreenProps } from './nav-data'
-import { NavBar } from './NavBar'
-import { TopBar } from './TopBar'
+import { ShellHeader } from './ShellHeader'
+import { Sidebar } from './Sidebar'
+import { useShellStats } from './useShellStats'
 
 const SCREENS: Record<string, ComponentType<ScreenProps>> = {
   'devices-awaiting': DevicesAwaitingTable,
@@ -24,25 +30,35 @@ const SCREENS: Record<string, ComponentType<ScreenProps>> = {
 
 export function AppShell() {
   const [activeTab, setActiveTab] = useState<string>('command-center')
+  const [alertsOpen, setAlertsOpen] = useState(false)
+  const stats = useShellStats()
+  const { open: openQuickAction } = useActionLauncher()
 
   const tab = NAV_TABS.find((t) => t.key === activeTab) ?? NAV_TABS[0]
   const Screen = tab.screen ? SCREENS[tab.screen] : undefined
 
   return (
-    <div style={{ minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
-      <TopBar />
-      <NavBar active={activeTab} onNavigate={setActiveTab} />
-      <main style={{ flex: 1, padding: 24 }}>
-        {Screen ? (
-          <Screen onNavigate={setActiveTab} />
-        ) : (
-          <EmptyState
-            icon="⏳"
-            title={`${tab.label} — coming soon`}
-            sub="This module hasn't been built yet."
-          />
-        )}
-      </main>
+    <div className="app">
+      <IconSprite />
+      <div className="app-glow" />
+      <Sidebar active={activeTab} onNavigate={setActiveTab} />
+      <div className="app-main">
+        <AppBar onOpenAlerts={() => setAlertsOpen(true)} onOpenQuickAction={openQuickAction} alertsCount={stats.alerts} />
+        <MobileNavbar active={activeTab} onNavigate={setActiveTab} />
+        <ShellHeader title={tab.label} onOpenAlerts={() => setAlertsOpen(true)} onOpenQuickAction={openQuickAction} />
+        <main className="page v2-scrollbars">
+          {Screen ? (
+            <Screen onNavigate={setActiveTab} />
+          ) : (
+            <EmptyState
+              icon="⏳"
+              title={`${tab.label} — coming soon`}
+              sub="This module has not been built yet."
+            />
+          )}
+        </main>
+      </div>
+      <AlertsModal open={alertsOpen} onClose={() => setAlertsOpen(false)} onNavigate={setActiveTab} />
       <ActionLauncher onNavigate={setActiveTab} />
     </div>
   )

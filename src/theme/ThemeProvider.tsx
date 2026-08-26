@@ -26,6 +26,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     document.body.classList.toggle('light', theme === 'light')
+    // v2 design-system tokens (src/styles/v2/) key off [data-theme] on <html>,
+    // kept in sync alongside the v1 body.light class during the migration.
+    document.documentElement.dataset.theme = theme
     window.localStorage.setItem(STORAGE_KEY, theme)
   }, [theme])
 
