@@ -1,4 +1,5 @@
 import type { Briefing } from '@/api'
+import { Alert, Button, Card, CardBody, CardFooter, CardHeader, CardTitle } from '@/components/ui-v2'
 import { formatBriefTime } from './commandCenterDisplay'
 import { useTypewriter } from './useTypewriter'
 
@@ -12,28 +13,34 @@ export function BriefingCard({ briefing, error, onNavigate }: BriefingCardProps)
   const { renderedHtml, done } = useTypewriter(briefing?.narrative_html ?? null)
 
   return (
-    <div className="brief">
-      <div className="brief-head">
-        <div className="glyph">◈</div>
-        <div className="brief-title">COrtai Briefing</div>
-        <div className="brief-time">{briefing ? formatBriefTime(briefing.generated_at) : ''}</div>
-      </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>CORTAI Briefing</CardTitle>
+        <span className="spacer" />
+        {briefing && <span className="card__sub num">{formatBriefTime(briefing.generated_at)}</span>}
+      </CardHeader>
       {error ? (
-        <div className="brief-text degraded">Briefing unavailable right now — {error}</div>
+        <CardBody>
+          <Alert variant="danger" title="Briefing unavailable right now" description={error} />
+        </CardBody>
       ) : briefing ? (
         <>
-          <div className="brief-text" dangerouslySetInnerHTML={{ __html: renderedHtml }} />
-          <div className={`brief-chips${done ? ' show' : ''}`}>
+          <CardBody className="card__body--scroll">
+            <p className="t-body c-secondary" dangerouslySetInnerHTML={{ __html: renderedHtml }} />
+          </CardBody>
+          <CardFooter style={{ opacity: done ? 1 : 0, transition: 'opacity 400ms' }}>
             {briefing.chips.map((chip) => (
-              <button key={chip.label} className="btn" onClick={() => onNavigate(chip.tab)}>
+              <Button key={chip.label} variant="secondary" size="sm" onClick={() => onNavigate(chip.tab)}>
                 {chip.label}
-              </button>
+              </Button>
             ))}
-          </div>
+          </CardFooter>
         </>
       ) : (
-        <div className="brief-text">Loading briefing…</div>
+        <CardBody>
+          <p className="t-body c-secondary">Loading briefing…</p>
+        </CardBody>
       )}
-    </div>
+    </Card>
   )
 }

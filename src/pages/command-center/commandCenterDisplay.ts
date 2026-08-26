@@ -1,7 +1,7 @@
 import type { AttentionSeverity } from '@/api'
 
-export function severityColor(severity: AttentionSeverity): string {
-  return severity === 'hi' ? 'var(--danger)' : 'var(--iot)'
+export function severityIconVariant(severity: AttentionSeverity): 'red' | 'amber' {
+  return severity === 'hi' ? 'red' : 'amber'
 }
 
 export function formatEventTime(iso: string): string {

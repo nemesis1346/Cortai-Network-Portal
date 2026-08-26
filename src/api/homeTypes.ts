@@ -14,19 +14,29 @@ export interface Briefing {
   generated_at: string
 }
 
+export interface Trend {
+  direction: 'up' | 'down'
+  percent: number
+}
+
 export interface HomeKpis {
   attacks: number
+  attacks_trend?: Trend
   downtime_min: number
+  downtime_trend?: Trend
   devices_protected: number
   self_healed: number
+  self_healed_trend?: Trend
 }
 
 export interface HomeHealthSection {
   key: 'network' | 'security' | 'internet' | 'insights'
   label: string
   stat: string
-  sub: string
+  /** May contain inline emphasis, e.g. <b class="c-success">...</b>. */
+  sub_html: string
   tab: string
+  trend?: Trend
 }
 
 export interface HomeHealth {
@@ -43,6 +53,8 @@ export interface AttentionItem {
   severity: AttentionSeverity
   title: string
   detail: string
+  /** Relative elapsed-time display, e.g. "42 min ago" — rendered as its own trailing column. */
+  elapsed: string
   tab: string
 }
 

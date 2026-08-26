@@ -3,12 +3,11 @@ import { homeApi, type AttentionItem, type Briefing, type HomeHealth, type HomeK
 import type { ScreenProps } from '@/shell/nav-data'
 import { AwaitingMiniCard } from './AwaitingMiniCard'
 import { BriefingCard } from './BriefingCard'
-import { HealthRingSection } from './HealthRingSection'
+import { HealthScoreCard } from './HealthScoreCard'
 import { ImpactBanner } from './ImpactBanner'
 import { LiveActivityFeed } from './LiveActivityFeed'
 import { NeedsAttentionList } from './NeedsAttentionList'
-import { QuickActionsCard } from './QuickActionsCard'
-import './command-center.css'
+import { SectionLinksGrid } from './SectionLinksGrid'
 
 function errorMessage(err: unknown): string {
   return err instanceof Error ? err.message : 'Failed to load.'
@@ -32,16 +31,22 @@ export function CommandCenter({ onNavigate }: ScreenProps) {
   }, [])
 
   return (
-    <div className="command-center">
-      <BriefingCard briefing={briefing} error={briefingError} onNavigate={onNavigate} />
-      <ImpactBanner kpis={kpis} error={kpisError} />
-      <AwaitingMiniCard onNavigate={onNavigate} />
-      <HealthRingSection health={health} error={healthError} onNavigate={onNavigate} />
-      <div className="home-grid">
+    <>
+      <section className="row" style={{ gridTemplateColumns: '370fr 600fr 600fr', flex: '288 1 0', minBlockSize: 288 }}>
+        <HealthScoreCard health={health} error={healthError} />
+        <BriefingCard briefing={briefing} error={briefingError} onNavigate={onNavigate} />
+        <ImpactBanner kpis={kpis} error={kpisError} />
+      </section>
+
+      <section className="row" style={{ gridTemplateColumns: '608.5fr 981.5fr', flex: '272 1 0', minBlockSize: 272 }}>
+        <SectionLinksGrid health={health} error={healthError} onNavigate={onNavigate} />
+        <AwaitingMiniCard onNavigate={onNavigate} />
+      </section>
+
+      <section className="row" style={{ gridTemplateColumns: '1fr 1fr', flex: '388 1 0', minBlockSize: 340 }}>
         <NeedsAttentionList items={attention} error={attentionError} onNavigate={onNavigate} />
         <LiveActivityFeed />
-        <QuickActionsCard onNavigate={onNavigate} />
-      </div>
-    </div>
+      </section>
+    </>
   )
 }

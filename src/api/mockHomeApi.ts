@@ -9,9 +9,12 @@ function delay<T>(value: T): Promise<T> {
 
 const SEED_KPIS: HomeKpis = {
   attacks: 43,
+  attacks_trend: { direction: 'down', percent: 4.2 },
   downtime_min: 0,
+  downtime_trend: { direction: 'up', percent: 8.1 },
   devices_protected: 29,
   self_healed: 17,
+  self_healed_trend: { direction: 'down', percent: 4.2 },
 }
 
 const SEED_HEALTH: HomeHealth = {
@@ -23,28 +26,31 @@ const SEED_HEALTH: HomeHealth = {
       key: 'network',
       label: 'Network',
       stat: '29 devices',
-      sub: '28 online · CAM-04 offline',
+      sub_html: '<b class="c-success">28 online</b> · <b class="c-danger">CAM-04 offline</b> · 3 awaiting registration',
       tab: 'network',
+      trend: { direction: 'down', percent: 2 },
     },
     {
       key: 'security',
       label: 'Security',
       stat: '43 blocked',
-      sub: 'today so far · no incidents · grade A',
+      sub_html: 'today so far · <b class="c-success">no incidents</b> · grade A',
       tab: 'security',
+      trend: { direction: 'down', percent: 1.3 },
     },
     {
       key: 'internet',
       label: 'Internet',
       stat: '8.2 ms',
-      sub: 'Bell healthy · apps 2/3 at baseline · 99.98% uptime',
+      sub_html: '<b class="c-success">Bell healthy</b> · apps 2/3 at baseline · 99.98% uptime',
       tab: 'wan-health',
+      trend: { direction: 'up', percent: 3.7 },
     },
     {
       key: 'insights',
       label: 'Insights',
-      stat: 'Peak: Tue 10 AM',
-      sub: '78% business apps · streaming ×3 after 6 PM',
+      stat: 'Peak: Tue 10am',
+      sub_html: '78% business apps · streaming ×3 after 6 PM',
       tab: 'insights',
     },
   ],
@@ -60,8 +66,8 @@ const SEED_ATTENTION: AttentionItem[] = [
     id: 'cam-04-offline',
     severity: 'hi',
     title: 'CAM-04 · Loading dock camera offline',
-    detail:
-      '42 min · no PoE draw on port 11 · remote reset queued, tech dispatched if no recovery by 10:30',
+    detail: 'no PoE draw on port 11 · remote reset queued, tech dispatched if no recovery by 10:30',
+    elapsed: '42 min ago',
     tab: 'network',
   },
   {
@@ -69,6 +75,7 @@ const SEED_ATTENTION: AttentionItem[] = [
     severity: 'med',
     title: 'Personal file-sync app on 2 laptops',
     detail: '40 GB/mo · flagged as shadow IT · awaiting your policy decision in Controls',
+    elapsed: '42 min ago',
     tab: 'controls',
   },
   {
@@ -76,6 +83,7 @@ const SEED_ATTENTION: AttentionItem[] = [
     severity: 'med',
     title: 'Firmware maintenance window · Sun 20 Jul, 2–4 AM',
     detail: 'Switch + AP updates scheduled · zero expected downtime · no action needed',
+    elapsed: '1h 30 min ago',
     tab: 'network',
   },
 ]
@@ -110,9 +118,9 @@ export const mockHomeApi: HomeApi = {
       day_label: now.toLocaleDateString('en-CA', { weekday: 'long' }),
       narrative_html: buildNarrative(now),
       chips: [
-        { label: 'View camera →', tab: 'network' },
-        { label: 'See what was blocked →', tab: 'security' },
-        { label: "Today's traffic →", tab: 'insights' },
+        { label: 'View camera', tab: 'network' },
+        { label: 'View blocked', tab: 'security' },
+        { label: "Today's traffic", tab: 'wan-health' },
       ],
       generated_at: now.toISOString(),
     })
