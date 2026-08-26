@@ -1,4 +1,4 @@
-import { Icon, IconButton } from '@/components/ui-v2'
+import { Avatar, Icon, IconButton } from '@/components/ui-v2'
 import { useClock } from '@/hooks/useClock'
 import { useTheme } from '@/theme/ThemeProvider'
 import { useShellStats } from './useShellStats'
@@ -49,6 +49,7 @@ export function ShellHeader({ title, onOpenAlerts, onOpenQuickAction }: ShellHea
           <IconButton variant="default" aria-label="Toggle theme" onClick={toggleTheme}>
             <Icon name={theme === 'light' ? 'moon' : 'sun'} />
           </IconButton>
+          <Avatar initials="JD" name="Jordan Diaz" />
         </div>
       </div>
     </div>

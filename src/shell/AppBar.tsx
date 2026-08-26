@@ -1,4 +1,4 @@
-import { Icon, IconButton } from '@/components/ui-v2'
+import { Avatar, Icon, IconButton } from '@/components/ui-v2'
 import { useTheme } from '@/theme/ThemeProvider'
 
 interface AppBarProps {
@@ -40,6 +40,7 @@ export function AppBar({ onOpenAlerts, onOpenQuickAction, alertsCount }: AppBarP
         <IconButton variant="default" size="sm" aria-label="Toggle theme" onClick={toggleTheme}>
           <Icon name={theme === 'light' ? 'moon' : 'sun'} />
         </IconButton>
+        <Avatar initials="JD" name="Jordan Diaz" size="md" />
       </div>
     </header>
   )
