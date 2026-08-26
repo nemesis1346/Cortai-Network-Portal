@@ -28,6 +28,9 @@ pnpm-debug.log*
 # OS
 .DS_Store
 
+# Reference/source docs (mockup, spec, handoff materials — not shipped app content)
+docs/
+
 # Terraform
 deploy/terraform/.terraform/
 deploy/terraform/*.tfstate
