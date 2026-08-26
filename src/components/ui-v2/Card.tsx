@@ -3,12 +3,15 @@ import type { CSSProperties, ReactNode } from 'react'
 interface CardProps {
   variant?: 'flat' | 'raised' | 'overlay' | 'plain'
   className?: string
+  style?: CSSProperties
   children: ReactNode
 }
 
-export function Card({ variant, className, children }: CardProps) {
+export function Card({ variant, className, style, children }: CardProps) {
   return (
-    <div className={`card${variant ? ` card--${variant}` : ''}${className ? ` ${className}` : ''}`}>{children}</div>
+    <div className={`card${variant ? ` card--${variant}` : ''}${className ? ` ${className}` : ''}`} style={style}>
+      {children}
+    </div>
   )
 }
 
