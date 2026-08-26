@@ -3,9 +3,9 @@ import { EmptyState } from '@/components/ui'
 import { IconSprite } from '@/components/ui-v2/IconSprite'
 import { CommandCenter } from '@/pages/command-center/CommandCenter'
 import { Controls } from '@/pages/controls/Controls'
-import { DevicesAwaitingTable } from '@/pages/devices-awaiting/DevicesAwaitingTable'
 import { Insights } from '@/pages/insights/Insights'
 import { MonthlyReport } from '@/pages/monthly-report/MonthlyReport'
+import { NetworkPage } from '@/pages/network/NetworkPage'
 import { SecurityCenter } from '@/pages/security/SecurityCenter'
 import { WanHealth } from '@/pages/wan-health/WanHealth'
 import { ActionLauncher } from './action-launcher/ActionLauncher'
@@ -19,7 +19,7 @@ import { Sidebar } from './Sidebar'
 import { useShellStats } from './useShellStats'
 
 const SCREENS: Record<string, ComponentType<ScreenProps>> = {
-  'devices-awaiting': DevicesAwaitingTable,
+  network: NetworkPage,
   'command-center': CommandCenter,
   controls: Controls,
   security: SecurityCenter,

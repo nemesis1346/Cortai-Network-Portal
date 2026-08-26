@@ -14,7 +14,7 @@ export interface NavTabDef {
 /** 7 tabs per the Nocturne mockup nav (cortai-network-topology.html:681-688), icons per the v2 shell's own NAV array. */
 export const NAV_TABS: NavTabDef[] = [
   { key: 'command-center', label: 'Command Center', screen: 'command-center', icon: 'layout-dashboard' },
-  { key: 'network', label: 'Network', screen: 'devices-awaiting', icon: 'network' },
+  { key: 'network', label: 'Network', screen: 'network', icon: 'network' },
   { key: 'security', label: 'Security', screen: 'security', icon: 'shield' },
   { key: 'insights', label: 'Insights', screen: 'insights', icon: 'laptop' },
   { key: 'wan-health', label: 'WAN Health', screen: 'wan-health', icon: 'activity' },
