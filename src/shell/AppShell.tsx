@@ -9,7 +9,7 @@ import { MonthlyReport } from '@/pages/monthly-report/MonthlyReport'
 import { SecurityCenter } from '@/pages/security/SecurityCenter'
 import { WanHealth } from '@/pages/wan-health/WanHealth'
 import { ActionLauncher } from './action-launcher/ActionLauncher'
-import { useActionLauncher } from './ActionLauncherContext'
+import { QuickActionModal } from './action-launcher/QuickActionModal'
 import { AlertsModal } from './AlertsModal'
 import { AppBar } from './AppBar'
 import { MobileNavbar } from './MobileNavbar'
@@ -31,8 +31,8 @@ const SCREENS: Record<string, ComponentType<ScreenProps>> = {
 export function AppShell() {
   const [activeTab, setActiveTab] = useState<string>('command-center')
   const [alertsOpen, setAlertsOpen] = useState(false)
+  const [quickActionOpen, setQuickActionOpen] = useState(false)
   const stats = useShellStats()
-  const { open: openQuickAction } = useActionLauncher()
 
   const tab = NAV_TABS.find((t) => t.key === activeTab) ?? NAV_TABS[0]
   const Screen = tab.screen ? SCREENS[tab.screen] : undefined
@@ -43,9 +43,17 @@ export function AppShell() {
       <div className="app-glow" />
       <Sidebar active={activeTab} onNavigate={setActiveTab} />
       <div className="app-main">
-        <AppBar onOpenAlerts={() => setAlertsOpen(true)} onOpenQuickAction={openQuickAction} alertsCount={stats.alerts} />
+        <AppBar
+          onOpenAlerts={() => setAlertsOpen(true)}
+          onOpenQuickAction={() => setQuickActionOpen(true)}
+          alertsCount={stats.alerts}
+        />
         <MobileNavbar active={activeTab} onNavigate={setActiveTab} />
-        <ShellHeader title={tab.label} onOpenAlerts={() => setAlertsOpen(true)} onOpenQuickAction={openQuickAction} />
+        <ShellHeader
+          title={tab.label}
+          onOpenAlerts={() => setAlertsOpen(true)}
+          onOpenQuickAction={() => setQuickActionOpen(true)}
+        />
         <main className="page v2-scrollbars">
           {Screen ? (
             <Screen onNavigate={setActiveTab} />
@@ -59,6 +67,7 @@ export function AppShell() {
         </main>
       </div>
       <AlertsModal open={alertsOpen} onClose={() => setAlertsOpen(false)} onNavigate={setActiveTab} />
+      <QuickActionModal open={quickActionOpen} onClose={() => setQuickActionOpen(false)} onNavigate={setActiveTab} />
       <ActionLauncher onNavigate={setActiveTab} />
     </div>
   )

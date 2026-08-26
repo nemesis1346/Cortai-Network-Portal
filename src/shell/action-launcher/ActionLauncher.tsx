@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import { useToast } from '@/components/ui'
 import { Badge, Chip, Icon, IconBadge, IconButton, Modal, ModalBody, ModalFoot, ModalHead, ModalSub, ModalTitle } from '@/components/ui-v2'
 import { useActionLauncher } from '@/shell/ActionLauncherContext'
-import { ACTIONS, type ActionEffect, type ActionItem } from './actionsData'
+import { ACTIONS, type ActionItem } from './actionsData'
+import { useRunActionEffect } from './useRunActionEffect'
 import './action-launcher.css'
 
 const TIER_BADGE_LABEL: Record<ActionItem['tierBadge'], string> = {
@@ -22,8 +22,7 @@ interface ActionLauncherProps {
 }
 
 export function ActionLauncher({ onNavigate }: ActionLauncherProps) {
-  const { isOpen, close, requestGuardianPrefill, requestFocusBlockInput } = useActionLauncher()
-  const { show: showToast } = useToast()
+  const { isOpen, close } = useActionLauncher()
   const [search, setSearch] = useState('')
   const [activeCategory, setActiveCategory] = useState('All')
   const searchRef = useRef<HTMLInputElement>(null)
@@ -40,30 +39,7 @@ export function ActionLauncher({ onNavigate }: ActionLauncherProps) {
     setActiveCategory('All')
   }
 
-  const runEffect = (effect: ActionEffect) => {
-    switch (effect.kind) {
-      case 'toast':
-        handleClose()
-        showToast(effect.message)
-        break
-      case 'navigate':
-        handleClose()
-        onNavigate(effect.tab)
-        if (effect.message) showToast(effect.message)
-        break
-      case 'navigate-focus-block':
-        handleClose()
-        onNavigate('controls')
-        requestFocusBlockInput()
-        break
-      case 'guardian-prefill':
-        handleClose()
-        onNavigate('controls')
-        requestGuardianPrefill(effect.prefix)
-        showToast('Fill in the details — engineer review within 1 business hour')
-        break
-    }
-  }
+  const runEffect = useRunActionEffect(onNavigate, handleClose)
 
   const categories = ['All', ...new Set(ACTIONS.map((a) => a.category))]
   const q = search.trim().toLowerCase()

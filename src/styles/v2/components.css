@@ -403,6 +403,21 @@
   background: var(--color-glass-surface); border-color: var(--color-border-disabled); color: var(--color-text-disabled);
 }
 
+.quick-action {
+  display: flex; align-items: center; gap: var(--spacing-12);
+  inline-size: 100%;
+  padding: var(--spacing-12);
+  border-radius: var(--radius-md);
+  background: var(--color-glass-surface);
+  border: 1px solid var(--color-glass-border);
+  font: inherit;
+  cursor: pointer;
+  text-align: start;
+  transition: background var(--motion-fast) var(--motion-ease), border-color var(--motion-fast) var(--motion-ease);
+}
+.quick-action:hover { background: var(--color-glass-surface-strong); border-color: var(--color-glass-border-strong); }
+.quick-action:active { background: var(--color-overlay-active); }
+
 /* ---------------------------------------------------------------------------
    BADGES
    ------------------------------------------------------------------------ */
@@ -622,6 +637,7 @@
   position: relative; overflow: hidden;
 }
 .modal__inner > *:not(.card__glow) { position: relative; z-index: 1; }
+.modal__inner--bare { padding: var(--spacing-6); }
 
 .modal__head { display: flex; align-items: flex-start; gap: var(--spacing-12); flex: 0 0 auto; }
 .modal__title { font: var(--type-h3); color: var(--color-text-primary); }
@@ -753,7 +769,6 @@ a.stat-card:active, .stat-card--link:active { background: var(--color-overlay-ac
   font: var(--fw-medium) 11px/16px var(--font-sans);
   min-block-size: 24px;
 }
-.indicator svg { inline-size: 14px; block-size: 14px; }
 .indicator--up   { background: var(--color-status-success-subtle-bg); color: var(--color-status-success-text); }
 .indicator--down { background: var(--color-status-danger-subtle-bg);  color: var(--color-status-danger-text); }
 .indicator--info { background: var(--color-glass-surface-strong);     color: var(--color-text-secondary); }
