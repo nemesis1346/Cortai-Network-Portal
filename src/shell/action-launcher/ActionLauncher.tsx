@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useToast } from '@/components/ui'
+import { Badge, Chip, Icon, IconBadge, IconButton, Modal, ModalBody, ModalFoot, ModalHead, ModalSub, ModalTitle } from '@/components/ui-v2'
 import { useActionLauncher } from '@/shell/ActionLauncherContext'
 import { ACTIONS, type ActionEffect, type ActionItem } from './actionsData'
 import './action-launcher.css'
@@ -8,6 +9,12 @@ const TIER_BADGE_LABEL: Record<ActionItem['tierBadge'], string> = {
   inst: 'AI GUARDIAN',
   guid: 'AI + YOUR OK',
   eng: 'ENGINEER',
+}
+
+const TIER_BADGE_VARIANT: Record<ActionItem['tierBadge'], 'success' | 'violet' | 'amber'> = {
+  inst: 'success',
+  guid: 'violet',
+  eng: 'amber',
 }
 
 interface ActionLauncherProps {
@@ -24,18 +31,8 @@ export function ActionLauncher({ onNavigate }: ActionLauncherProps) {
   useEffect(() => {
     if (!isOpen) return
     const timer = setTimeout(() => searchRef.current?.focus(), 80)
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') handleClose()
-    }
-    document.addEventListener('keydown', onKeyDown)
-    return () => {
-      clearTimeout(timer)
-      document.removeEventListener('keydown', onKeyDown)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => clearTimeout(timer)
   }, [isOpen])
-
-  if (!isOpen) return null
 
   const handleClose = () => {
     close()
@@ -78,96 +75,88 @@ export function ActionLauncher({ onNavigate }: ActionLauncherProps) {
   const groupedCategories = [...new Set(filtered.map((a) => a.category))]
 
   return (
-    <div
-      className="ov open"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) handleClose()
-      }}
-    >
-      <div className="acts" role="dialog" aria-modal="true" aria-label="What do you need to do?">
-        <div className="acts-head">
-          <div className="row1">
-            <div className="ttl">What do you need to do?</div>
-            <div className="sub">20 common actions, no hold music</div>
-            <button
-              className="btn"
-              style={{ position: 'static', marginLeft: 'auto', padding: '6px 10px' }}
-              onClick={handleClose}
-              aria-label="Close"
-            >
-              ✕
-            </button>
-          </div>
-          <input
-            ref={searchRef}
-            className="acts-search"
-            placeholder="Search — try 'wifi', 'new employee', 'vendor', 'slow'…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <div className="acts-cats">
-            {categories.map((c) => (
-              <button key={c} className={c === activeCategory ? 'on' : ''} onClick={() => setActiveCategory(c)}>
-                {c}
-              </button>
-            ))}
-          </div>
+    <Modal open={isOpen} onClose={handleClose} size="lg" label="What do you need to do?">
+      <ModalHead>
+        <div>
+          <ModalTitle>What do you need to do?</ModalTitle>
+          <ModalSub>20 common actions, no hold music</ModalSub>
         </div>
+        <div className="spacer" />
+        <IconButton variant="ghost" size="sm" aria-label="Close" onClick={handleClose}>
+          <Icon name="x" />
+        </IconButton>
+      </ModalHead>
 
-        <div className="acts-body">
-          {filtered.length === 0 ? (
-            <div style={{ textAlign: 'center', color: 'var(--text-3)', fontSize: 13, padding: '30px 10px' }}>
-              Nothing matches &quot;{search}&quot; — describe it as a change request in Controls and an engineer will
-              pick it up.
-            </div>
-          ) : (
-            groupedCategories.map((cat) => (
-              <div key={cat}>
-                <div className="acts-cat-lab">{cat}</div>
-                <div className="acts-grid">
-                  {filtered
-                    .filter((a) => a.category === cat)
-                    .map((a) => (
-                      <button key={a.id} className="act" onClick={() => runEffect(a.effect)}>
-                        <span className="ic" style={{ background: `${a.color}1f`, color: a.color }}>
-                          {a.icon}
-                        </span>
-                        <span style={{ minWidth: 0 }}>
-                          <span className="t">{a.title}</span>
-                          <span className="d" style={{ display: 'block' }}>
-                            {a.description}
-                          </span>
-                        </span>
-                        <span className={`bd ${a.tierBadge}`}>{TIER_BADGE_LABEL[a.tierBadge]}</span>
-                      </button>
-                    ))}
-                </div>
+      <input
+        ref={searchRef}
+        className="qa-search"
+        placeholder="Search — try 'wifi', 'new employee', 'vendor', 'slow'…"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+      <div className="qa-cats">
+        {categories.map((c) => (
+          <Chip key={c} size="sm" pressed={c === activeCategory} onClick={() => setActiveCategory(c)}>
+            {c}
+          </Chip>
+        ))}
+      </div>
+
+      <ModalBody>
+        {filtered.length === 0 ? (
+          <div className="qa-empty">
+            Nothing matches &quot;{search}&quot; — describe it as a change request in Controls and an engineer will
+            pick it up.
+          </div>
+        ) : (
+          groupedCategories.map((cat) => (
+            <div key={cat}>
+              <div className="qa-cat-label">{cat}</div>
+              <div className="qa-grid">
+                {filtered
+                  .filter((a) => a.category === cat)
+                  .map((a) => (
+                    <button key={a.id} className="qa-tile" onClick={() => runEffect(a.effect)}>
+                      <IconBadge variant="neutral" size="sm">
+                        <span style={{ fontSize: 14 }}>{a.icon}</span>
+                      </IconBadge>
+                      <span className="qa-tile__text">
+                        <span className="qa-tile__title">{a.title}</span>
+                        <span className="qa-tile__desc">{a.description}</span>
+                      </span>
+                      <Badge variant={TIER_BADGE_VARIANT[a.tierBadge]} size="sm">
+                        {TIER_BADGE_LABEL[a.tierBadge]}
+                      </Badge>
+                    </button>
+                  ))}
               </div>
-            ))
-          )}
-        </div>
+            </div>
+          ))
+        )}
+      </ModalBody>
 
-        <div className="acts-foot">
-          <span>
-            <span className="bd inst" style={{ marginRight: 5 }}>
+      <ModalFoot>
+        <div className="qa-legend">
+          <span className="qa-legend__item">
+            <Badge variant="success" size="sm">
               AI GUARDIAN
-            </span>
+            </Badge>
             done autonomously — snapshot, verify, auto-rollback
           </span>
-          <span>
-            <span className="bd guid" style={{ marginRight: 5 }}>
+          <span className="qa-legend__item">
+            <Badge variant="violet" size="sm">
               AI + YOUR OK
-            </span>
+            </Badge>
             Guardian executes after your one-tap approval
           </span>
-          <span>
-            <span className="bd eng" style={{ marginRight: 5 }}>
+          <span className="qa-legend__item">
+            <Badge variant="amber" size="sm">
               ENGINEER
-            </span>
+            </Badge>
             Guardian preps the plan, a human reviews &amp; applies
           </span>
         </div>
-      </div>
-    </div>
+      </ModalFoot>
+    </Modal>
   )
 }
