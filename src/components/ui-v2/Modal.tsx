@@ -1,14 +1,17 @@
 import { useEffect, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 
 interface ModalProps {
   open: boolean
   onClose: () => void
   size?: 'xs' | 'sm' | 'md' | 'lg'
   label: string
+  /** Reduced inner padding for content that already carries its own padding, e.g. a single Alert. */
+  bare?: boolean
   children: ReactNode
 }
 
-export function Modal({ open, onClose, size = 'md', label, children }: ModalProps) {
+export function Modal({ open, onClose, size = 'md', label, bare, children }: ModalProps) {
   useEffect(() => {
     if (!open) return
     const onKeyDown = (e: KeyboardEvent) => {
@@ -20,7 +23,12 @@ export function Modal({ open, onClose, size = 'md', label, children }: ModalProp
 
   if (!open) return null
 
-  return (
+  // Portalled to <body> — a modal invoked from inside a Card would otherwise
+  // land as a direct child of .card, whose `.card > *:not(.card__glow) {
+  // position: relative }` rule (for glow layering) outranks .modal-scrim's
+  // own `position: fixed` on specificity, silently trapping the modal inside
+  // the card's layout instead of covering the viewport.
+  return createPortal(
     <div
       className="modal-scrim"
       onMouseDown={(e) => {
@@ -28,11 +36,17 @@ export function Modal({ open, onClose, size = 'md', label, children }: ModalProp
       }}
     >
       <div className={`modal${size !== 'md' ? ` modal--${size}` : ''}`}>
-        <div className="modal__inner" role="dialog" aria-modal="true" aria-label={label}>
+        <div
+          className={`modal__inner${bare ? ' modal__inner--bare' : ''}`}
+          role="dialog"
+          aria-modal="true"
+          aria-label={label}
+        >
           {children}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }
 
@@ -46,6 +60,10 @@ export function ModalTitle({ children }: { children: ReactNode }) {
 
 export function ModalSub({ children }: { children: ReactNode }) {
   return <div className="modal__sub">{children}</div>
+}
+
+export function ModalRule() {
+  return <div className="modal__rule" />
 }
 
 export function ModalBody({ children }: { children: ReactNode }) {
