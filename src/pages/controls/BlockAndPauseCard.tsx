@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Badge, Button, Card, CardBody, CardFooter, CardHeader, CardTitle, Input, Select } from '@/components/ui-v2'
 import { useToast } from '@/components/ui'
 import { controlsApi, deviceApi, type Device } from '@/api'
 import { displayName } from '@/pages/devices-awaiting/deviceDisplay'
@@ -68,46 +69,61 @@ export function BlockAndPauseCard({ onChanged }: BlockAndPauseCardProps) {
   }
 
   return (
-    <div className="card">
-      <h3>Block a website</h3>
-      <div className="blk-input">
-        <input
-          ref={domainInputRef}
-          placeholder="e.g. bet365.com"
-          value={domainInput}
-          onChange={(e) => setDomainInput(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && block()}
-        />
-        <button className="btn primary" onClick={block}>
-          Block
-        </button>
-      </div>
-      <div className="chips">
-        {domains?.map((domain) => (
-          <span key={domain} className="chip">
-            {domain} <button onClick={() => unblock(domain)}>✕</button>
-          </span>
-        ))}
-      </div>
-      <div className="gov-note">{BLOCK_PUSH_NOTE}</div>
+    <>
+      <Card>
+        <CardHeader>
+          <CardTitle>Block a website</CardTitle>
+        </CardHeader>
+        <CardBody fixed>
+          <div className="field-row">
+            <Input
+              ref={domainInputRef}
+              placeholder="e.g. bet365.com"
+              value={domainInput}
+              onChange={(e) => setDomainInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && block()}
+            />
+            <Button variant="secondary" onClick={block}>
+              Block
+            </Button>
+          </div>
+          <div className="chip-set">
+            {domains?.map((domain) => (
+              <Badge key={domain} variant="neutral" onRemove={() => unblock(domain)} removeLabel={`Unblock ${domain}`}>
+                {domain}
+              </Badge>
+            ))}
+          </div>
+        </CardBody>
+        <CardFooter>
+          <p className="t-label c-tertiary">{BLOCK_PUSH_NOTE}</p>
+        </CardFooter>
+      </Card>
 
-      <h3 style={{ marginTop: 20 }}>Pause a device</h3>
-      <div className="blk-input">
-        <select className="devsel" style={{ flex: 1 }} value={selectedMac} onChange={(e) => setSelectedMac(e.target.value)}>
-          {devices?.map((d) => (
-            <option key={d.mac} value={d.mac}>
-              {displayName(d)}
-            </option>
-          ))}
-        </select>
-        <button className="btn" disabled={!selectedMac} onClick={pause}>
-          {PAUSE_BUTTON_LABEL}
-        </button>
-      </div>
-      <div className="gov-note">
-        Cuts internet access for that device only — useful for a misbehaving laptop or during an HR conversation.
-        Auto-restores.
-      </div>
-    </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Pause a device</CardTitle>
+        </CardHeader>
+        <CardBody fixed>
+          <div className="field-row">
+            <Select
+              aria-label="Device"
+              value={selectedMac}
+              onChange={(e) => setSelectedMac(e.target.value)}
+              options={(devices ?? []).map((d) => ({ value: d.mac, label: displayName(d) }))}
+            />
+            <Button variant="secondary" disabled={!selectedMac} onClick={pause}>
+              {PAUSE_BUTTON_LABEL}
+            </Button>
+          </div>
+        </CardBody>
+        <CardFooter>
+          <p className="t-label c-tertiary">
+            Cuts internet access for that device only — useful for a misbehaving laptop or during an HR conversation.
+            Auto-restores.
+          </p>
+        </CardFooter>
+      </Card>
+    </>
   )
 }

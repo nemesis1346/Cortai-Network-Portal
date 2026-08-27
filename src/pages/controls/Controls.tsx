@@ -1,17 +1,19 @@
 import { useCallback, useEffect, useState } from 'react'
+import { Badge, Card, CardHeader, CardTitle } from '@/components/ui-v2'
 import { useToast } from '@/components/ui'
 import { controlsApi, type ChangeRecord, type TriageResult } from '@/api'
 import type { ScreenProps } from '@/shell/nav-data'
 import { BlockAndPauseCard } from './BlockAndPauseCard'
-import { ChangeDetailDrawer } from './ChangeDetailDrawer'
+import { ChangeDetailModal } from './ChangeDetailModal'
 import { GuardianForm } from './GuardianForm'
 import { GuardianReplyCard } from './GuardianReplyCard'
 import { NetworkPoliciesCard } from './NetworkPoliciesCard'
 import { RecentChangesCard } from './RecentChangesCard'
 import { TierRail } from './TierRail'
-import './controls.css'
+import { TrySuggestions } from './TrySuggestions'
 
 export function Controls(_props: ScreenProps) {
+  const [text, setText] = useState('')
   const [triaging, setTriaging] = useState(false)
   const [triage, setTriage] = useState<TriageResult | null>(null)
   const [running, setRunning] = useState(false)
@@ -109,44 +111,56 @@ export function Controls(_props: ScreenProps) {
 
   const detailRecord = changes?.find((c) => c.num === detailNum) ?? null
 
-  return (
-    <div className="controls-page">
-      <h1>Controls</h1>
-      <p className="lead">
-        Safe, instant changes you can make yourself — and an engineer-backed path for everything else. Every change
-        is logged, attributed, and reversible.
-      </p>
+  const pickSuggestion = (suggestionText: string) => {
+    setText(suggestionText)
+    handleTriage(suggestionText)
+  }
 
-      <div className="card mkc">
-        <h3>
-          Make a change <span className="tagpill">GUARDIAN TRIAGE · FOUR-TIER MODEL</span>
-        </h3>
-        <TierRail activeTier={triage?.tier ?? null} />
-        <GuardianForm onTriage={handleTriage} onEmpty={() => showToast('Describe what you need first')} submitting={triaging} />
-        {triage && (
-          <GuardianReplyCard
-            triage={triage}
-            running={running}
-            record={record}
-            onRun={handleRun}
-            onSchedule={handleSchedule}
-            onSendToEngineer={handleSendToEngineer}
-            onUnblock={handleUnblock}
-            onKeepBlocked={handleKeepBlocked}
-            onReverse={handleReverse}
-            onViewInLog={setDetailNum}
-            onClose={closeGuard}
+  return (
+    <>
+      <div className="row" style={{ gridTemplateColumns: 'minmax(0,1fr)', flex: '0 0 auto' }}>
+        <Card data-step={triage ? 'active' : 'default'}>
+          <CardHeader>
+            <CardTitle>Make a change</CardTitle>
+            <span className="spacer" />
+            <Badge variant="neutral">Guardian Triage · Four-Tier Model</Badge>
+          </CardHeader>
+          <TierRail activeTier={triage?.tier ?? null} />
+          <TrySuggestions onPick={pickSuggestion} submitting={triaging} />
+          {triage && (
+            <GuardianReplyCard
+              triage={triage}
+              running={running}
+              record={record}
+              onRun={handleRun}
+              onSchedule={handleSchedule}
+              onSendToEngineer={handleSendToEngineer}
+              onUnblock={handleUnblock}
+              onKeepBlocked={handleKeepBlocked}
+              onReverse={handleReverse}
+              onViewInLog={setDetailNum}
+              onClose={closeGuard}
+            />
+          )}
+          <GuardianForm
+            text={text}
+            onTextChange={setText}
+            onTriage={handleTriage}
+            onEmpty={() => showToast('Describe what you need first')}
+            submitting={triaging}
           />
-        )}
+        </Card>
       </div>
 
-      <div className="grid g3">
+      <div className="row" style={{ gridTemplateColumns: '535fr 535fr 500fr', flex: '0 0 auto', minBlockSize: 481 }}>
         <NetworkPoliciesCard onChanged={reloadChanges} />
-        <BlockAndPauseCard onChanged={reloadChanges} />
+        <div className="stack stack--split">
+          <BlockAndPauseCard onChanged={reloadChanges} />
+        </div>
         <RecentChangesCard changes={changes} onOpen={setDetailNum} />
       </div>
 
-      <ChangeDetailDrawer record={detailRecord} onClose={() => setDetailNum(null)} onReverse={handleReverse} />
-    </div>
+      <ChangeDetailModal record={detailRecord} onClose={() => setDetailNum(null)} onReverse={handleReverse} />
+    </>
   )
 }

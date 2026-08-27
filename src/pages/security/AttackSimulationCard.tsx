@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useToast } from '@/components/ui'
 import { controlsApi, securityApi, type ChangeRecord, type SimulationScenario } from '@/api'
-import { ChangeDetailDrawer } from '@/pages/controls/ChangeDetailDrawer'
+import { ChangeDetailModal } from '@/pages/controls/ChangeDetailModal'
 import type { StepAnimState } from '@/hooks/useStepRunner'
 import { useStepRunner } from '@/hooks/useStepRunner'
 
@@ -104,7 +104,7 @@ export function AttackSimulationCard() {
         </>
       )}
 
-      <ChangeDetailDrawer record={showDetail ? record : null} onClose={() => setShowDetail(false)} onReverse={() => {}} />
+      <ChangeDetailModal record={showDetail ? record : null} onClose={() => setShowDetail(false)} onReverse={() => {}} />
     </div>
   )
 }

@@ -1,44 +1,88 @@
-import type { ChangeRecord } from '@/api'
-import { badgeVisual, tierTagVisual } from './controlsDisplay'
+import { useState } from 'react'
+import { Alert, Badge, Card, CardBody, CardHeader, CardTitle, Icon, IconBadge, IconButton, Modal } from '@/components/ui-v2'
+import { CHANGE_BADGE_LABEL, type ChangeBadge, type ChangeRecord, type GuardTier } from '@/api'
 
 interface RecentChangesCardProps {
   changes: ChangeRecord[] | null
   onOpen: (num: number) => void
 }
 
+const TIER_VARIANT: Record<GuardTier, 'accent' | 'info' | 'amber' | 'violet'> = {
+  1: 'accent',
+  2: 'info',
+  3: 'amber',
+  4: 'violet',
+}
+
+const STATUS_VARIANT: Record<ChangeBadge, 'success' | 'info' | 'amber' | 'danger'> = {
+  ai: 'success',
+  done: 'success',
+  sched: 'amber',
+  sub: 'amber',
+  can: 'amber',
+  rev: 'info',
+  blk: 'danger',
+}
+
 export function RecentChangesCard({ changes, onOpen }: RecentChangesCardProps) {
+  const [infoOpen, setInfoOpen] = useState(false)
+
   return (
-    <div className="card">
-      <h3>
-        Recent changes <span className="tagpill">CLICK ANY ENTRY FOR DETAIL + REVERSE</span>
-      </h3>
-      <div>
+    <Card>
+      <CardHeader>
+        <CardTitle>Recent changes</CardTitle>
+        <IconButton variant="ghost" size="xs" aria-label="What this means" onClick={() => setInfoOpen(true)}>
+          <Icon name="info" />
+        </IconButton>
+        <span className="spacer" />
+      </CardHeader>
+      <CardBody>
         {!changes ? (
-          <div className="text-3">Loading…</div>
+          <p className="t-body-sm c-tertiary">Loading…</p>
         ) : (
-          changes.map((rec) => {
-            const badge = badgeVisual(rec.badge)
-            const tierTag = tierTagVisual(rec.tier)
-            return (
-              <div key={rec.num} className="cr-row" onClick={() => onOpen(rec.num)}>
-                <span className="tch" style={{ color: tierTag.color, background: tierTag.bg }}>
-                  {tierTag.label}
+          changes.map((rec) => (
+            <button
+              key={rec.num}
+              type="button"
+              className="tr"
+              style={{ gridTemplateColumns: '44px 108px minmax(0,1fr)', alignItems: 'center' }}
+              onClick={() => onOpen(rec.num)}
+            >
+              <span className="td" style={{ paddingInlineStart: 'var(--spacing-12)' }}>
+                <Badge variant={TIER_VARIANT[rec.tier]} size="sm">
+                  T{rec.tier}
+                </Badge>
+              </span>
+              <span className="td">
+                <Badge variant={STATUS_VARIANT[rec.badge]} size="sm">
+                  {CHANGE_BADGE_LABEL[rec.badge]}
+                </Badge>
+              </span>
+              <span className="td">
+                <span className="td__device">
+                  <b>{rec.title}</b>
+                  <span>
+                    {rec.when} · #CR-{rec.num}
+                  </span>
                 </span>
-                <span className="st2" style={{ color: badge.color, background: badge.bg }}>
-                  {badge.label}
-                </span>
-                <span className="m">
-                  <b>{rec.title}</b> · {rec.when} · #CR-{rec.num}
-                </span>
-              </div>
-            )
-          })
+              </span>
+            </button>
+          ))
         )}
-      </div>
-      <div className="gov-note">
-        <b>How changes work:</b> a snapshot is taken before anything is touched, the result is verified after, and
-        failed verification rolls back automatically — at every tier, human or AI.
-      </div>
-    </div>
+      </CardBody>
+
+      <Modal open={infoOpen} onClose={() => setInfoOpen(false)} size="xs" label="Recent changes" bare>
+        <Alert
+          variant="info"
+          icon={
+            <IconBadge variant="blue">
+              <Icon name="info" />
+            </IconBadge>
+          }
+          title="Recent changes"
+          description="Every change — ours or yours — is logged with a tier, a snapshot and a rollback window. Click any row to see what exactly was done and to restore the snapshot."
+        />
+      </Modal>
+    </Card>
   )
 }

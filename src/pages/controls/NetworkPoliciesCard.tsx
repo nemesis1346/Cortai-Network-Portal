@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Toggle, useToast } from '@/components/ui'
+import { Card, CardBody, CardHeader, CardTitle, Toggle } from '@/components/ui-v2'
+import { useToast } from '@/components/ui'
 import { controlsApi, type PolicyToggle } from '@/api'
 
 interface NetworkPoliciesCardProps {
@@ -23,18 +24,23 @@ export function NetworkPoliciesCard({ onChanged }: NetworkPoliciesCardProps) {
   }
 
   return (
-    <div className="card">
-      <h3>Network policies</h3>
-      {policies?.map((policy, i) => (
-        <Toggle
-          key={policy.key}
-          label={policy.label}
-          detail={policy.detail}
-          checked={policy.on}
-          onChange={() => toggle(policy.key)}
-          last={i === policies.length - 1}
-        />
-      ))}
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>Network policies</CardTitle>
+      </CardHeader>
+      <CardBody>
+        <div className="policy-list">
+          {policies?.map((policy) => (
+            <div key={policy.key}>
+              <div>
+                <p className="t-body c-primary">{policy.label}</p>
+                <p className="t-label c-tertiary">{policy.detail}</p>
+              </div>
+              <Toggle checked={policy.on} onChange={() => toggle(policy.key)} aria-label={policy.label} />
+            </div>
+          ))}
+        </div>
+      </CardBody>
+    </Card>
   )
 }
