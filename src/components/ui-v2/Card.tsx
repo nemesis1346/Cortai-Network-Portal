@@ -1,15 +1,13 @@
-import type { CSSProperties, ReactNode } from 'react'
+import type { CSSProperties, HTMLAttributes, ReactNode } from 'react'
 
-interface CardProps {
+interface CardProps extends HTMLAttributes<HTMLDivElement> {
   variant?: 'flat' | 'raised' | 'overlay' | 'plain'
-  className?: string
-  style?: CSSProperties
   children: ReactNode
 }
 
-export function Card({ variant, className, style, children }: CardProps) {
+export function Card({ variant, className, children, ...rest }: CardProps) {
   return (
-    <div className={`card${variant ? ` card--${variant}` : ''}${className ? ` ${className}` : ''}`} style={style}>
+    <div className={`card${variant ? ` card--${variant}` : ''}${className ? ` ${className}` : ''}`} {...rest}>
       {children}
     </div>
   )

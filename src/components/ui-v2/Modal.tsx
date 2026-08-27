@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode } from 'react'
+import { useEffect, type CSSProperties, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 
 interface ModalProps {
@@ -70,6 +70,10 @@ export function ModalBody({ children }: { children: ReactNode }) {
   return <div className="modal__body v2-scrollbars">{children}</div>
 }
 
-export function ModalFoot({ children }: { children: ReactNode }) {
-  return <div className="modal__foot">{children}</div>
+export function ModalFoot({ style, children }: { style?: CSSProperties; children: ReactNode }) {
+  return (
+    <div className="modal__foot" style={style}>
+      {children}
+    </div>
+  )
 }
