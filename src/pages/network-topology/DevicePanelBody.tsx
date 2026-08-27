@@ -8,7 +8,7 @@ import { TrafficCard } from './TrafficCard'
 
 export function DevicePanelBody({ device }: { device: DeviceDetail }) {
   return (
-    <div className="net-panel__body">
+    <div className="net-panel__body v2-scrollbars">
       <PanelActions actions={device.actions} />
       {device.fault && (
         <Alert

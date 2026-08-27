@@ -8,7 +8,7 @@ interface ClusterPanelBodyProps {
 
 export function ClusterPanelBody({ node, onSelectDevice }: ClusterPanelBodyProps) {
   return (
-    <div className="net-panel__body">
+    <div className="net-panel__body v2-scrollbars">
       <section>
         <p className="section-title">Devices ({node.devices.length})</p>
         <div className="topo-list">

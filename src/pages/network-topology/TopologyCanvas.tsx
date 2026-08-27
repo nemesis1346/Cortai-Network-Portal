@@ -16,7 +16,7 @@ export function TopologyCanvas({ infraNodes, clusterNodes, selectedKey, onSelect
         <span className="topology__grid" aria-hidden="true" />
         <p className="topo-hint">Click any node to expand · click a device for full detail</p>
 
-        <div className="topo-scroll" tabIndex={0} role="group" aria-label="Network diagram">
+        <div className="topo-scroll v2-scrollbars" tabIndex={0} role="group" aria-label="Network diagram">
           <div className="topo-canvas">
             <svg className="topo-canvas__links" viewBox="0 0 1160 830" aria-hidden="true">
               <g fill="none" strokeWidth={1.6}>
