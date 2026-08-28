@@ -1,9 +1,12 @@
-import type { EventRow } from '@/api'
+export interface EventListRow {
+  time: string
+  text_html: string
+}
 
-export function EventList({ title, rows }: { title: string; rows: EventRow[] }) {
+export function EventList({ title, rows }: { title?: string; rows: EventListRow[] }) {
   return (
     <section>
-      <p className="section-title">{title}</p>
+      {title && <p className="section-title">{title}</p>}
       <div className="events">
         {rows.map((row, i) => (
           <div key={i}>

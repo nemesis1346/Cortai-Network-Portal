@@ -33,12 +33,13 @@ export function CardHeaderActions({ children }: { children: ReactNode }) {
 interface CardBodyProps {
   fixed?: boolean
   className?: string
+  style?: CSSProperties
   children: ReactNode
 }
 
-export function CardBody({ fixed, className, children }: CardBodyProps) {
+export function CardBody({ fixed, className, style, children }: CardBodyProps) {
   return (
-    <div className={`card__body v2-scrollbars${fixed ? ' card__body--fixed' : ''}${className ? ` ${className}` : ''}`}>
+    <div className={`card__body v2-scrollbars${fixed ? ' card__body--fixed' : ''}${className ? ` ${className}` : ''}`} style={style}>
       {children}
     </div>
   )

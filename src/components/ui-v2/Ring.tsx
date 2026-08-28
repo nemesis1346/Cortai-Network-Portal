@@ -7,7 +7,9 @@ interface RingProps {
   strokeWidth?: number
   variant?: 'success' | 'warning' | 'danger'
   size?: 'sm' | 'md' | 'grade'
-  children: ReactNode
+  /** Omit for a bare ring with no inner label — e.g. WAN Health's uptime ring, whose
+   * percentage is already shown as its own large text beside the ring. */
+  children?: ReactNode
 }
 
 export function Ring({ value, radius = 36, strokeWidth = 5, variant, size, children }: RingProps) {
@@ -32,7 +34,7 @@ export function Ring({ value, radius = 36, strokeWidth = 5, variant, size, child
           strokeDashoffset={offset}
         />
       </svg>
-      <span className="ring__label num">{children}</span>
+      {children !== undefined && <span className="ring__label num">{children}</span>}
     </div>
   )
 }

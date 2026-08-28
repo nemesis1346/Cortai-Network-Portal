@@ -1,7 +1,6 @@
 import type { InfraNode } from '@/api'
-import { EventList } from './EventList'
+import { EventList, SpecGrid } from '@/components/ui-v2'
 import { PanelActions } from './PanelActions'
-import { SpecGrid } from './SpecGrid'
 import { TrafficCard } from './TrafficCard'
 
 export function InfraPanelBody({ node }: { node: InfraNode }) {
