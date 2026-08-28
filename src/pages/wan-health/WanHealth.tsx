@@ -5,7 +5,6 @@ import { CloudAppHealthCard } from './CloudAppHealthCard'
 import { IspIncidentsCard } from './IspIncidentsCard'
 import { LatencyChart } from './LatencyChart'
 import { WanStatusCards } from './WanStatusCards'
-import './wan-health.css'
 
 export function WanHealth(_props: ScreenProps) {
   const [status, setStatus] = useState<WanStatus | null>(null)
@@ -36,19 +35,19 @@ export function WanHealth(_props: ScreenProps) {
   }, [])
 
   return (
-    <div className="wan-health-page">
-      <div>
-        <h1>Internet &amp; WAN Health</h1>
-        <p className="lead">
-          We monitor your internet provider every 10 seconds — latency, jitter, packet loss and outages — and switch
-          you to backup automatically before you notice. When your ISP underdelivers, we have the evidence.
-        </p>
+    <>
+      <div className="row" style={{ gridTemplateColumns: '350fr 610fr 610fr', flex: '0 0 auto', minBlockSize: 118 }}>
+        <WanStatusCards status={status} primaryLatencyMs={primaryLatencyMs} />
       </div>
 
-      <WanStatusCards status={status} primaryLatencyMs={primaryLatencyMs} />
-      <LatencyChart series={series} />
-      <CloudAppHealthCard apps={apps} liveLatencies={liveLatencies} />
-      <IspIncidentsCard incidents={incidents} />
-    </div>
+      <div className="row" style={{ gridTemplateColumns: 'minmax(0,1fr)', flex: '341 1 0', minBlockSize: 341 }}>
+        <LatencyChart series={series} />
+      </div>
+
+      <div className="row" style={{ gridTemplateColumns: '1090fr 500fr', flex: '485 1 0', minBlockSize: 485 }}>
+        <CloudAppHealthCard apps={apps} liveLatencies={liveLatencies} />
+        <IspIncidentsCard incidents={incidents} />
+      </div>
+    </>
   )
 }

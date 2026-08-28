@@ -1312,3 +1312,28 @@ a.stat-card:active, .stat-card--link:active { background: var(--color-overlay-ac
 .lateral p b { color: var(--color-text-primary); }
 .lateral p .act { color: var(--color-text-primary); font-weight: var(--fw-medium); }
 .lateral .badge { margin-block: var(--spacing-8); }
+
+/* ---------------------------------------------------------------------------
+   WAN HEALTH
+   ------------------------------------------------------------------------ */
+.metric-row { gap: 10px; }
+.metric-row > div { display: flex; flex-direction: column; gap: 2px; min-inline-size: 0; }
+
+.wanchart-container { display: flex; flex-direction: column; block-size: 100%; min-block-size: 0; }
+.wanchart-wrap { display: flex; gap: var(--spacing-8); flex: 1 1 auto; min-block-size: 0; }
+.wanchart-axis { position: relative; inline-size: 32px; flex: 0 0 auto; }
+.wanchart-axis span {
+  position: absolute; inset-inline-end: 0; translate: 0 -50%;
+  font: var(--type-label-xs); color: var(--color-text-tertiary); white-space: nowrap;
+}
+.wanchart-plot { position: relative; flex: 1 1 auto; min-inline-size: 0; }
+.wanchart { inline-size: 100%; block-size: 100%; display: block; }
+.wanchart-label { position: absolute; transform: translateY(-100%); white-space: nowrap; pointer-events: none; }
+.wanchart-label.threshold { font: var(--type-label-xs); color: var(--color-status-warning); }
+.wanchart-label.annotation { font: var(--type-label-emphasis); color: var(--color-status-danger); }
+.axis24 {
+  display: flex; justify-content: space-between; flex: 0 0 auto;
+  margin-inline-start: calc(32px + var(--spacing-8));
+  font: var(--type-label-xs); color: var(--color-text-tertiary);
+  margin-block-start: var(--spacing-8);
+}

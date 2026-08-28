@@ -82,7 +82,7 @@ const SEED_CLOUD_APPS: CloudApp[] = [
     abbreviation: 'Sn',
     color: '#2dd4a7',
     tag: 'TICKETING',
-    meta: 'servicenow.com · used by 4 devices · click for who\'s on it',
+    meta: 'servicenow.com · used by 4 devices',
     verdict: 'degraded',
     verdictLabel: 'DEGRADED — THEIR SIDE',
     nowMs: 214,
