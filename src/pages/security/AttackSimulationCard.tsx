@@ -2,7 +2,20 @@ import { useEffect, useState } from 'react'
 import { useToast } from '@/components/ui'
 import { controlsApi, securityApi, type ChangeRecord, type SimulationScenario } from '@/api'
 import { ChangeDetailModal } from '@/pages/controls/ChangeDetailModal'
-import type { StepAnimState } from '@/hooks/useStepRunner'
+import {
+  Badge,
+  Button,
+  Checklist,
+  Icon,
+  IconButton,
+  Modal,
+  ModalBody,
+  ModalFoot,
+  ModalHead,
+  ModalRule,
+  ModalTitle,
+  type ChecklistItem,
+} from '@/components/ui-v2'
 import { useStepRunner } from '@/hooks/useStepRunner'
 
 type Phase = 'idle' | 'running' | 'done'
@@ -10,13 +23,12 @@ type Phase = 'idle' | 'running' | 'done'
 const prefersReducedMotion = () =>
   typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches
 
-function marker(animState: StepAnimState, tone: 'ok' | 'warn'): string {
-  if (animState === 'pending') return '○'
-  if (animState === 'running') return '◌'
-  return tone === 'warn' ? '⚠' : '✓'
+interface AttackSimulationCardProps {
+  open: boolean
+  onClose: () => void
 }
 
-export function AttackSimulationCard() {
+export function AttackSimulationCard({ open, onClose }: AttackSimulationCardProps) {
   const [scenario, setScenario] = useState<SimulationScenario | null>(null)
   const [phase, setPhase] = useState<Phase>('idle')
   const [record, setRecord] = useState<ChangeRecord | null>(null)
@@ -53,58 +65,78 @@ export function AttackSimulationCard() {
     setRecord(null)
   }
 
+  const close = () => {
+    reset()
+    onClose()
+  }
+
+  const checklistItems: ChecklistItem[] =
+    scenario?.steps.map((step, i) => {
+      if (phase === 'idle') return { label: step.description, state: 'pending' }
+      const animState = stepStates[i] ?? 'pending'
+      if (animState === 'done') return { label: step.description, state: step.tone === 'warn' ? 'warn' : 'done' }
+      return { label: step.description, state: animState }
+    }) ?? []
+
   return (
-    <div className="card" style={{ marginTop: 14 }}>
-      <h3>
-        Attack simulation — what if someone uses a camera port to get in?{' '}
-        <span className="tagpill">DEMO — SAFE TO RUN</span>
-      </h3>
-      <p style={{ fontSize: 12.5, color: 'var(--text-2)', lineHeight: 1.6, marginBottom: 12 }}>
-        The classic physical attack: unplug an outdoor camera and plug a laptop into its network jack. This
-        simulation replays exactly what the network does, second by second, if that happens at your loading dock
-        tonight.
-      </p>
+    <>
+      <Modal open={open} onClose={close} size="sm" label="Attack simulation">
+        <ModalHead>
+          <ModalTitle>Attack simulation</ModalTitle>
+          <span className="spacer" />
+          <IconButton variant="ghost" size="sm" aria-label="Close" onClick={close}>
+            <Icon name="x" />
+          </IconButton>
+        </ModalHead>
+        <ModalRule />
 
-      {phase === 'idle' && (
-        <button className="btn primary" disabled={!scenario} onClick={run}>
-          Run the simulation
-        </button>
-      )}
+        <ModalBody>
+          <Badge variant="info">DEMO — SAFE TO RUN</Badge>
+          <p className="t-h3 c-primary">What if someone uses a camera port to get in?</p>
+          <p className="t-body-sm c-tertiary">
+            The classic physical attack: unplug an outdoor camera and plug a laptop into its network jack. This
+            simulation replays exactly what the network does, second by second, if that happens at your loading dock
+            tonight.
+          </p>
 
-      {phase !== 'idle' && scenario && (
-        <>
-          <ul className="steps">
-            {scenario.steps.map((step, i) => (
-              <li key={i} className={stepStates[i] === 'done' ? (step.tone === 'warn' ? 'done warnf' : 'done') : stepStates[i] === 'running' ? 'run' : ''}>
-                <span className="mk">{marker(stepStates[i] ?? 'pending', step.tone)}</span>
-                <span>
-                  <b style={{ fontFamily: 'var(--mono)', fontSize: 10.5, color: 'var(--text-3)', marginRight: 8 }}>{step.time}</b>
-                  {step.description}
-                </span>
-              </li>
-            ))}
-          </ul>
-
-          {phase === 'done' && record && (
+          {phase !== 'idle' && scenario && (
             <>
-              <div className="dres ok" style={{ marginTop: 12 }}>
-                {scenario.verdict}
-              </div>
-              <div className="guard-msg" dangerouslySetInnerHTML={{ __html: scenario.message_html }} />
-              <div className="guard-btns" style={{ marginTop: 10 }}>
-                <button className="btn" onClick={() => setShowDetail(true)}>
-                  View the incident log entry
-                </button>
-                <button className="btn" onClick={reset}>
-                  Reset
-                </button>
-              </div>
+              <Checklist items={checklistItems} />
+              {phase === 'done' && record && (
+                <>
+                  <p className="t-body c-primary">
+                    <b>{scenario.verdict}</b>
+                  </p>
+                  <p className="t-body-sm c-tertiary" dangerouslySetInnerHTML={{ __html: scenario.message_html }} />
+                </>
+              )}
             </>
           )}
-        </>
-      )}
+        </ModalBody>
+
+        <ModalFoot>
+          {phase === 'idle' && (
+            <Button variant="primary" size="sm" disabled={!scenario} onClick={run}>
+              Run the simulation
+            </Button>
+          )}
+          {phase === 'done' && record && (
+            <>
+              <Button variant="secondary" size="sm" onClick={() => setShowDetail(true)}>
+                View the incident log entry
+              </Button>
+              <Button variant="secondary" size="sm" onClick={reset}>
+                Reset
+              </Button>
+            </>
+          )}
+          <Button variant="secondary" size="sm" onClick={close}>
+            Close
+          </Button>
+        </ModalFoot>
+      </Modal>
 
       <ChangeDetailModal record={showDetail ? record : null} onClose={() => setShowDetail(false)} onReverse={() => {}} />
-    </div>
+    </>
   )
 }

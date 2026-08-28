@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { securityApi, type ProtectionStackItem } from '@/api'
+import { Badge, Card, CardBody, CardHeader, CardTitle } from '@/components/ui-v2'
 
 export function ProtectionStackCard() {
   const [items, setItems] = useState<ProtectionStackItem[] | null>(null)
@@ -9,18 +10,25 @@ export function ProtectionStackCard() {
   }, [])
 
   return (
-    <div className="card" style={{ marginBottom: 14 }}>
-      <h3>Your protection stack</h3>
-      {items?.map((item) => (
-        <div key={item.label} className="stack-row">
-          <div className="tick">✓</div>
-          <div>
-            {item.label}
-            <div className="sub">{item.detail}</div>
-          </div>
-          <div className="ok">ACTIVE</div>
+    <Card>
+      <CardHeader>
+        <CardTitle>Your protection stack</CardTitle>
+      </CardHeader>
+      <CardBody>
+        <div className="stack-list">
+          {items?.map((item) => (
+            <div key={item.label}>
+              <div>
+                <b>{item.label}</b>
+                <p>{item.detail}</p>
+              </div>
+              <Badge variant="success" size="sm">
+                Active
+              </Badge>
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
+      </CardBody>
+    </Card>
   )
 }

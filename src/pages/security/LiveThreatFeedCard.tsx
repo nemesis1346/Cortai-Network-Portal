@@ -1,8 +1,15 @@
 import { useEffect, useState } from 'react'
-import { ACTIVITY_LABEL, securityApi, type ActivityEvent } from '@/api'
+import { ACTIVITY_LABEL, securityApi, type ActivityEvent, type ActivityEventKind } from '@/api'
+import { Badge, Card, CardBody, CardHeader, CardTitle } from '@/components/ui-v2'
 import { formatEventTime } from '@/pages/command-center/commandCenterDisplay'
 
 const MAX_ROWS = 14
+
+const KIND_BADGE_VARIANT: Record<ActivityEventKind, 'danger' | 'warning' | 'success'> = {
+  blk: 'danger',
+  qtn: 'warning',
+  alw: 'success',
+}
 
 export function LiveThreatFeedCard() {
   const [events, setEvents] = useState<ActivityEvent[]>([])
@@ -14,23 +21,33 @@ export function LiveThreatFeedCard() {
   }, [])
 
   return (
-    <div className="card">
-      <h3>
-        Live threat feed <span className="tagpill">LIVE</span>
-      </h3>
-      <div className="feed">
+    <Card>
+      <CardHeader>
+        <CardTitle>Live activity</CardTitle>
+        <span className="spacer" />
+        <Badge variant="success" dot live>
+          Live
+        </Badge>
+      </CardHeader>
+      <CardBody>
         {events.length === 0 ? (
-          <div className="text-3">Watching for activity…</div>
+          <p className="t-body-sm c-tertiary">Watching for activity…</p>
         ) : (
-          events.map((event) => (
-            <div key={event.id} className="feed-row">
-              <span className="feed-t mono-num">{formatEventTime(event.at)}</span>
-              <span className={`feed-b ${event.kind}`}>{ACTIVITY_LABEL[event.kind]}</span>
-              <span className="feed-msg" dangerouslySetInnerHTML={{ __html: event.message_html }} />
-            </div>
-          ))
+          <div className="live">
+            {events.map((event) => (
+              <div key={event.id} className="live__row">
+                <span className="live__time">{formatEventTime(event.at)}</span>
+                <span className="live__text" dangerouslySetInnerHTML={{ __html: event.message_html }} />
+                <span className="live__badge">
+                  <Badge variant={KIND_BADGE_VARIANT[event.kind]} size="sm">
+                    {ACTIVITY_LABEL[event.kind]}
+                  </Badge>
+                </span>
+              </div>
+            ))}
+          </div>
         )}
-      </div>
-    </div>
+      </CardBody>
+    </Card>
   )
 }
