@@ -1,4 +1,4 @@
-import { useEffect, type CSSProperties, type ReactNode } from 'react'
+import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 
 interface ModalProps {
@@ -12,10 +12,18 @@ interface ModalProps {
 }
 
 export function Modal({ open, onClose, size = 'md', label, bare, children }: ModalProps) {
+  const scrimRef = useRef<HTMLDivElement>(null)
+
   useEffect(() => {
     if (!open) return
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
+      if (e.key !== 'Escape') return
+      // With nested modals (a modal opened from inside another), each has its
+      // own listener — only the topmost (last in the DOM) should respond, so
+      // one Escape press closes one modal, not the whole stack.
+      const scrims = document.querySelectorAll('.modal-scrim')
+      if (scrims[scrims.length - 1] !== scrimRef.current) return
+      onClose()
     }
     document.addEventListener('keydown', onKeyDown)
     return () => document.removeEventListener('keydown', onKeyDown)
@@ -30,6 +38,7 @@ export function Modal({ open, onClose, size = 'md', label, bare, children }: Mod
   // the card's layout instead of covering the viewport.
   return createPortal(
     <div
+      ref={scrimRef}
       className="modal-scrim"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose()
