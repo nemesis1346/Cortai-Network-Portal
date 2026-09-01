@@ -1,3 +1,5 @@
+import { Badge } from '@/components/ui-v2'
+
 interface InsightsCalloutsProps {
   callouts: string[] | null
 }
@@ -5,12 +7,12 @@ interface InsightsCalloutsProps {
 export function InsightsCallouts({ callouts }: InsightsCalloutsProps) {
   if (!callouts) return null
   return (
-    <div className="callouts">
+    <>
       {callouts.map((c) => (
-        <span key={c} className="co">
+        <Badge key={c} variant="neutral">
           {c}
-        </span>
+        </Badge>
       ))}
-    </div>
+    </>
   )
 }

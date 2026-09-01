@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { deviceApi, insightsApi, type Device, type InsightsData } from '@/api'
+import { Select } from '@/components/ui-v2'
 import { displayName } from '@/pages/devices-awaiting/deviceDisplay'
 import { StaffActivityGate } from '@/pages/security/StaffActivityGate'
 import type { ScreenProps } from '@/shell/nav-data'
@@ -7,7 +8,6 @@ import { InsightsCallouts } from './InsightsCallouts'
 import { TopDestinationsCard } from './TopDestinationsCard'
 import { TopTalkersCard } from './TopTalkersCard'
 import { UsageHeatmap } from './UsageHeatmap'
-import './insights.css'
 
 function isLaptop(device: Device): boolean {
   return device.inferred_type.toLowerCase().includes('laptop')
@@ -28,33 +28,32 @@ export function Insights(_props: ScreenProps) {
   }, [scope])
 
   return (
-    <div className="insights-page">
-      <div className="ins-head">
-        <div>
-          <h1>Insights</h1>
-          <p className="lead">How your business actually uses the network — when, where to, by whom.</p>
+    <>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-12)', flex: '0 0 auto', marginBlockEnd: 'var(--spacing-20)', flexWrap: 'wrap' }}>
+        <InsightsCallouts callouts={data?.callouts ?? null} />
+        <span className="spacer" />
+        <div style={{ inlineSize: 160 }}>
+          <Select
+            size="sm"
+            value={scope}
+            onChange={(e) => setScope(e.target.value)}
+            options={[{ value: 'all', label: 'All devices' }, ...laptops.map((d) => ({ value: d.mac, label: displayName(d) }))]}
+          />
         </div>
-        <select className="devsel" value={scope} onChange={(e) => setScope(e.target.value)}>
-          <option value="all">All devices</option>
-          {laptops.map((d) => (
-            <option key={d.mac} value={d.mac}>
-              {displayName(d)}
-            </option>
-          ))}
-        </select>
       </div>
 
-      <InsightsCallouts callouts={data?.callouts ?? null} />
-      <UsageHeatmap cells={data?.heatmap ?? null} />
+      <div className="row" style={{ gridTemplateColumns: 'minmax(0,1fr)', flex: '0 0 auto' }}>
+        <UsageHeatmap cells={data?.heatmap ?? null} />
+      </div>
 
-      <div className="grid g21">
+      <div className="row" style={{ gridTemplateColumns: '1fr 1fr', flex: '0 0 auto', minBlockSize: 392 }}>
         <TopDestinationsCard destinations={data?.topDestinations ?? null} scopeLabel={data?.scopeLabel ?? null} />
         <TopTalkersCard talkers={data?.topTalkers ?? null} />
       </div>
 
-      <div style={{ marginTop: 14 }}>
+      <div className="row" style={{ gridTemplateColumns: 'minmax(0,1fr)', flex: '0 0 auto' }}>
         <StaffActivityGate />
       </div>
-    </div>
+    </>
   )
 }
