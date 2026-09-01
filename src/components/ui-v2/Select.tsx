@@ -6,17 +6,23 @@ interface SelectOption {
   label: string
 }
 
-interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'children'> {
+interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'children' | 'size'> {
   /** Omit for a bare select in a field-row — visible field labels are opt-in, not automatic. */
   label?: string
+  size?: 'sm'
   options: SelectOption[]
 }
 
-export function Select({ label, options, id, ...rest }: SelectProps) {
+export function Select({ label, size, options, id, ...rest }: SelectProps) {
   const fieldId = id ?? (label ? `sel-${label.replace(/\s+/g, '-').toLowerCase()}` : undefined)
   const select = (
     <div className="select-wrap">
-      <select id={fieldId} className="input select" aria-label={label ? undefined : 'Select'} {...rest}>
+      <select
+        id={fieldId}
+        className={`input select${size ? ` input--${size}` : ''}`}
+        aria-label={label ? undefined : 'Select'}
+        {...rest}
+      >
         {options.map((opt) => (
           <option key={opt.value} value={opt.value}>
             {opt.label}
