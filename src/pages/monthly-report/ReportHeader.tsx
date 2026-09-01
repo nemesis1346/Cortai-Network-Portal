@@ -1,29 +1,33 @@
-import { useToast } from '@/components/ui'
-import { reportApi, type MonthlyReport } from '@/api'
+import type { MonthlyReport } from '@/api'
+import { Button, Card, Ring } from '@/components/ui-v2'
 
 interface ReportHeaderProps {
   report: MonthlyReport
+  onNavigate: (tab: string) => void
 }
 
-export function ReportHeader({ report }: ReportHeaderProps) {
-  const toast = useToast()
+const GRADE_VALUE: Record<string, number> = {
+  A: 100,
+  B: 85,
+  C: 70,
+  D: 55,
+  F: 30,
+}
 
-  const handleExport = () => {
-    reportApi.exportPdf().then((result) => toast.show(result.message))
-  }
-
+export function ReportHeader({ report, onNavigate }: ReportHeaderProps) {
   return (
-    <div className="rep-head">
-      <div className="grade">{report.grade}</div>
-      <div>
-        <div className="t1">{report.month} — Network &amp; Security Report</div>
-        <div className="t2" dangerouslySetInnerHTML={{ __html: report.headline_html }} />
+    <Card variant="plain" style={{ flexDirection: 'row', alignItems: 'center', gap: 'var(--spacing-20)' }}>
+      <span className="card__glow card__glow--success" />
+      <Ring value={GRADE_VALUE[report.grade] ?? 100} size="grade" radius={37} strokeWidth={2} variant="success">
+        <span className="c-accent">{report.grade}</span>
+      </Ring>
+      <div style={{ flex: '1 1 auto', minInlineSize: 0 }}>
+        <h2 className="t-h3 c-primary">{report.month} — Network &amp; Security Report</h2>
+        <p className="t-body-sm c-tertiary" dangerouslySetInnerHTML={{ __html: report.headline_html }} />
       </div>
-      <div style={{ marginLeft: 'auto' }}>
-        <button className="btn primary" onClick={handleExport}>
-          Export PDF
-        </button>
-      </div>
-    </div>
+      <Button variant="primary" onClick={() => onNavigate('controls')}>
+        Triage with Guardian
+      </Button>
+    </Card>
   )
 }

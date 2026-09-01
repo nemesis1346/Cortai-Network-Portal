@@ -1379,3 +1379,15 @@ a.stat-card:active, .stat-card--link:active { background: var(--color-overlay-ac
 .dest-row > b:first-child { font: var(--type-body); color: var(--color-text-primary); }
 .dest-row > .num { text-align: end; font: var(--type-body); color: var(--color-text-primary); }
 .dest-row > span:last-child { grid-column: 2 / -1; font: var(--type-label); letter-spacing: var(--tracking-label); color: var(--color-text-tertiary); }
+
+/* ---------------------------------------------------------------------------
+   MONTHLY REPORT
+   ------------------------------------------------------------------------ */
+.compare { display: grid; grid-template-columns: 180px minmax(0,1fr) minmax(0,1fr); gap: 0 var(--spacing-20); }
+.compare > * { padding-block: var(--spacing-12); border-block-end: 1px dashed var(--color-divider); }
+.compare .h { font: var(--type-overline); letter-spacing: var(--tracking-overline); text-transform: uppercase; color: var(--color-text-tertiary); }
+.compare .k { font: var(--type-body); color: var(--color-text-tertiary); }
+.compare .y { font: var(--type-body); color: var(--color-text-primary); }
+.compare .y::before { content: "✓ "; color: var(--color-accent-text); }
+.compare .n { font: var(--type-body); color: var(--color-text-tertiary); }
+.compare .n::before { content: "✗ "; color: var(--color-status-danger-text); }

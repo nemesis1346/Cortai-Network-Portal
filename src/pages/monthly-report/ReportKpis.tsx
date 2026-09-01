@@ -1,19 +1,33 @@
 import type { ReportKpi } from '@/api'
+import { StatCard } from '@/components/ui-v2'
 
 interface ReportKpisProps {
   kpis: ReportKpi[]
 }
 
+const GLOW: Record<NonNullable<ReportKpi['colorClass']>, 'success' | 'danger'> = {
+  green: 'success',
+  red: 'danger',
+}
+
+const VALUE_CLASS: Record<NonNullable<ReportKpi['colorClass']>, string> = {
+  green: 'c-accent',
+  red: 'c-danger',
+}
+
 export function ReportKpis({ kpis }: ReportKpisProps) {
   return (
-    <div className="grid g5">
+    <>
       {kpis.map((kpi) => (
-        <div key={kpi.label} className="card">
-          <h3>{kpi.label}</h3>
-          <div className={`big${kpi.colorClass ? ` ${kpi.colorClass}` : ''}`}>{kpi.value}</div>
-          <div className="bigsub">{kpi.sub}</div>
-        </div>
+        <StatCard
+          key={kpi.label}
+          compact
+          glow={kpi.colorClass ? GLOW[kpi.colorClass] : undefined}
+          title={kpi.label}
+          value={kpi.colorClass ? <span className={VALUE_CLASS[kpi.colorClass]}>{kpi.value}</span> : kpi.value}
+          label={kpi.sub}
+        />
       ))}
-    </div>
+    </>
   )
 }
