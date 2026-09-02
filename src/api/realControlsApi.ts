@@ -1,4 +1,5 @@
 import type { ChangeRecord, ControlsApi, PolicyToggle, TriageResult } from './controlsTypes'
+import { apiRequest, SITE_ID } from './realApiClient'
 
 /**
  * Thin fetch() wrapper against the Guardian triage/changes endpoints proposed in
@@ -10,96 +11,84 @@ import type { ChangeRecord, ControlsApi, PolicyToggle, TriageResult } from './co
  * No WebSocket execution-progress channel yet — out of scope while unused, same
  * posture as realHomeApi's activity feed.
  */
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ''
-const SITE_ID = import.meta.env.VITE_SITE_ID ?? 'default'
-
-async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${BASE_URL}${path}`, {
-    headers: { 'Content-Type': 'application/json' },
-    ...init,
-  })
-  if (!res.ok) {
-    throw new Error(`Request to ${path} failed: ${res.status} ${res.statusText}`)
-  }
-  return res.json() as Promise<T>
-}
-
 export const realControlsApi: ControlsApi = {
   triage(description) {
-    return request<TriageResult>(`/api/v1/sites/${SITE_ID}/changes/triage`, {
+    return apiRequest<TriageResult>(`/api/v1/sites/${SITE_ID}/changes/triage`, {
       method: 'POST',
       body: JSON.stringify({ description }),
     })
   },
 
   runChange(triage) {
-    return request<ChangeRecord>(`/api/v1/sites/${SITE_ID}/changes`, {
+    return apiRequest<ChangeRecord>(`/api/v1/sites/${SITE_ID}/changes`, {
       method: 'POST',
       body: JSON.stringify({ action: 'run', triage }),
     })
   },
 
   scheduleChange(triage) {
-    return request<ChangeRecord>(`/api/v1/sites/${SITE_ID}/changes`, {
+    return apiRequest<ChangeRecord>(`/api/v1/sites/${SITE_ID}/changes`, {
       method: 'POST',
       body: JSON.stringify({ action: 'schedule', triage }),
     })
   },
 
   submitToEngineer(triage) {
-    return request<ChangeRecord>(`/api/v1/sites/${SITE_ID}/changes`, {
+    return apiRequest<ChangeRecord>(`/api/v1/sites/${SITE_ID}/changes`, {
       method: 'POST',
       body: JSON.stringify({ action: 'submit-to-engineer', triage }),
     })
   },
 
   unblockFromDiagnosis(description) {
-    return request<ChangeRecord>(`/api/v1/sites/${SITE_ID}/changes`, {
+    return apiRequest<ChangeRecord>(`/api/v1/sites/${SITE_ID}/changes`, {
       method: 'POST',
       body: JSON.stringify({ action: 'unblock-from-diagnosis', description }),
     })
   },
 
   listPolicies() {
-    return request<PolicyToggle[]>(`/api/v1/sites/${SITE_ID}/policies`)
+    return apiRequest<PolicyToggle[]>(`/api/v1/sites/${SITE_ID}/policies`)
   },
 
   togglePolicy(key) {
-    return request(`/api/v1/sites/${SITE_ID}/policies/${encodeURIComponent(key)}/toggle`, { method: 'POST' })
+    return apiRequest(`/api/v1/sites/${SITE_ID}/policies/${encodeURIComponent(key)}/toggle`, { method: 'POST' })
   },
 
   listBlockedDomains() {
-    return request<string[]>(`/api/v1/sites/${SITE_ID}/blocked-domains`)
+    return apiRequest<string[]>(`/api/v1/sites/${SITE_ID}/blocked-domains`)
   },
 
   blockDomain(domain) {
-    return request(`/api/v1/sites/${SITE_ID}/blocked-domains`, {
+    return apiRequest(`/api/v1/sites/${SITE_ID}/blocked-domains`, {
       method: 'POST',
       body: JSON.stringify({ domain }),
     })
   },
 
   unblockDomain(domain) {
-    return request(`/api/v1/sites/${SITE_ID}/blocked-domains/${encodeURIComponent(domain)}`, { method: 'DELETE' })
+    return apiRequest(`/api/v1/sites/${SITE_ID}/blocked-domains/${encodeURIComponent(domain)}`, { method: 'DELETE' })
   },
 
+  // Same flat /api/devices/{mac}/... convention as realDeviceApi.ts — this is a
+  // device action, not a site-scoped Controls resource, per the Module 1 scope doc.
   pauseDevice(mac, label) {
-    return request(`/api/v1/sites/${SITE_ID}/devices/${encodeURIComponent(mac)}/pause`, {
+    return apiRequest(`/api/devices/${encodeURIComponent(mac)}/pause`, {
       method: 'POST',
       body: JSON.stringify({ label }),
     })
   },
 
   listChanges() {
-    return request<ChangeRecord[]>(`/api/v1/sites/${SITE_ID}/changes`)
+    return apiRequest<ChangeRecord[]>(`/api/v1/sites/${SITE_ID}/changes`)
   },
 
   reverseChange(num) {
-    return request<ChangeRecord>(`/api/v1/changes/${num}/reverse`, { method: 'POST' })
+    return apiRequest<ChangeRecord>(`/api/v1/sites/${SITE_ID}/changes/${num}/reverse`, { method: 'POST' })
   },
 
   logContainment(input) {
-    return request<ChangeRecord>(`/api/v1/sites/${SITE_ID}/changes`, {
+    return apiRequest<ChangeRecord>(`/api/v1/sites/${SITE_ID}/changes`, {
       method: 'POST',
       body: JSON.stringify({ action: 'log-containment', ...input }),
     })
