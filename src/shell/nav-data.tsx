@@ -5,8 +5,8 @@ export interface ScreenProps {
 export interface NavTabDef {
   key: string
   label: string
-  /** Present only for tabs with a real, built screen — see AppShell's SCREENS map. */
-  screen?: string
+  /** Key into AppShell's SCREENS map. */
+  screen: string
   /** Lucide sprite symbol name (v2 shell), e.g. 'shield' -> #i-shield. */
   icon: string
 }

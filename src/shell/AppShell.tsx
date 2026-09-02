@@ -1,5 +1,4 @@
 import { useState, type ComponentType } from 'react'
-import { EmptyState } from '@/components/ui'
 import { IconSprite } from '@/components/ui-v2/IconSprite'
 import { CommandCenter } from '@/pages/command-center/CommandCenter'
 import { Controls } from '@/pages/controls/Controls'
@@ -35,7 +34,7 @@ export function AppShell() {
   const stats = useShellStats()
 
   const tab = NAV_TABS.find((t) => t.key === activeTab) ?? NAV_TABS[0]
-  const Screen = tab.screen ? SCREENS[tab.screen] : undefined
+  const Screen = SCREENS[tab.screen]
 
   return (
     <div className="app">
@@ -55,15 +54,7 @@ export function AppShell() {
           onOpenQuickAction={() => setQuickActionOpen(true)}
         />
         <main className="page v2-scrollbars">
-          {Screen ? (
-            <Screen onNavigate={setActiveTab} />
-          ) : (
-            <EmptyState
-              icon="⏳"
-              title={`${tab.label} — coming soon`}
-              sub="This module has not been built yet."
-            />
-          )}
+          <Screen onNavigate={setActiveTab} />
         </main>
       </div>
       <AlertsModal open={alertsOpen} onClose={() => setAlertsOpen(false)} onNavigate={setActiveTab} />
