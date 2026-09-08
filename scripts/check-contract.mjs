@@ -107,23 +107,26 @@ const REQUIRED_TOKENS = [
   if (!viteConfig.includes("'@'")) fail('vite.config.ts no longer wires the "@" resolve alias')
 }
 
-// 4. src/api/index.ts still exports the swappable deviceApi + controlsApi
+// 4. src/api/index.ts is still the one swappable PortalApi boundary
 {
   const apiIndex = read('src/api/index.ts')
-  if (!/export const deviceApi/.test(apiIndex)) {
-    fail('src/api/index.ts no longer exports "deviceApi" — the mock/real swap point is broken')
+  if (!/export const portalApi/.test(apiIndex)) {
+    fail('src/api/index.ts no longer exports "portalApi" — the service-layer boundary is broken')
   }
-  if (!/export const controlsApi/.test(apiIndex)) {
-    fail('src/api/index.ts no longer exports "controlsApi" — the mock/real swap point is broken')
+  if (!/VITE_USE_MOCK/.test(apiIndex)) {
+    fail('src/api/index.ts no longer reads VITE_USE_MOCK — the mock/real swap point is broken')
+  }
+  if (!/export interface PortalApi/.test(read('src/api/portalTypes.ts'))) {
+    fail('src/api/portalTypes.ts no longer exports the PortalApi interface — the backend team implements against it')
   }
 }
 
-// 5 + 6. Walk pages: deviceApi/controlsApi usage must import from '@/api' and never carry
+// 5 + 6. Walk pages: portalApi.devices/portalApi.controls usage must import from '@/api' and never carry
 //        a hardcoded outcome string on a mutating call or toast — every outcome must come
 //        from the API's own response, matching this app's "server-authoritative toast" rule.
 //
 //        The numeric-JSX-literal check (no hardcoded counts/badges in rendered text) stays
-//        scoped to deviceApi files only: it exists to catch a hardcoded count that should be
+//        scoped to portalApi.devices files only: it exists to catch a hardcoded count that should be
 //        bound to live data (e.g. a device badge). Controls' API-touching files also contain
 //        static descriptive copy with legitimate numbers ("under 10 seconds", "Pause 1 h")
 //        that have nothing to do with live app state — extending the digit ban there would
@@ -146,19 +149,19 @@ const OUTCOME_WORDS = /\b(Approved|Blocked|Quarantined|placed on|banned network-
 function checkPageFile(filePath) {
   const relPath = filePath.slice(ROOT.length + 1)
   const text = readFileSync(filePath, 'utf8')
-  const usesDeviceApi = /\bdeviceApi\.(list|approve|quarantine|block|patch)\b/.test(text)
-  const usesControlsApi = /\bcontrolsApi\.\w+\b/.test(text)
+  const usesDeviceApi = /\bportalApi\.devices\.(list|approve|quarantine|block|patch)\b/.test(text)
+  const usesControlsApi = /\bportalApi\.controls\.\w+\b/.test(text)
   if (!usesDeviceApi && !usesControlsApi) return // presentational-only file, exempt
 
   if (!/from ['"]@\/api['"]/.test(text)) {
-    fail(`${relPath} calls deviceApi.*/controlsApi.* but doesn't import it from '@/api'`)
+    fail(`${relPath} calls portalApi.devices.*/portalApi.controls.* but doesn't import portalApi from '@/api'`)
   }
 
   const sourceFile = ts.createSourceFile(filePath, text, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX)
   const mutatingMethods = [...DEVICE_MUTATING_METHODS, ...CONTROLS_MUTATING_METHODS]
 
   function visit(node) {
-    // No hardcoded digits in rendered JSX text — deviceApi files only, see note above.
+    // No hardcoded digits in rendered JSX text — portalApi.devices files only, see note above.
     if (usesDeviceApi && ts.isJsxText(node)) {
       const trimmed = node.text.trim()
       if (trimmed && /\d/.test(trimmed)) {

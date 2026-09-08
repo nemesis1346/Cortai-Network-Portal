@@ -5,7 +5,7 @@ import { apiRequest, apiSocket, SITE_ID } from './realApiClient'
  * Thin fetch()/WebSocket wrapper against the site-scoped Command Center endpoints
  * proposed in docs/spec-ihm-cortai-network-ops.pdf (page 5). Not wired in by default —
  * see ./index.ts. Confirm exact response envelopes with Stefan before flipping
- * VITE_API_MODE=real. No reconnect/backoff logic yet — out of scope while unused.
+ * VITE_USE_MOCK=false. No reconnect/backoff logic yet — out of scope while unused.
  */
 export const realHomeApi: HomeApi = {
   getBriefing() {

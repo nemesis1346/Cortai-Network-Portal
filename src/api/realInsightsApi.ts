@@ -7,7 +7,7 @@ import { apiRequest, SITE_ID } from './realApiClient'
  * Only `scope` is sent — `range` has no frontend control yet (Insights' own time-range
  * toggles are decorative, matching the v2 mock's own non-functional ones); add it here
  * once a real range selector exists. Not wired in by default — see ./index.ts. Confirm
- * exact response envelope with Stefan before flipping VITE_API_MODE=real.
+ * exact response envelope with Stefan before setting VITE_USE_MOCK=false.
  */
 export const realInsightsApi: InsightsApi = {
   getInsights(scope) {

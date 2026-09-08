@@ -6,7 +6,7 @@ import { apiRequest, apiSocket, SITE_ID } from './realApiClient'
  * doesn't explicitly enumerate WAN Health endpoints, so these paths are a reasonable
  * extrapolation under the same convention as the other real-API files. Not wired in
  * by default — see ./index.ts. Confirm exact response envelopes with Stefan before
- * flipping VITE_API_MODE=real. No reconnect/backoff logic yet — out of scope while
+ * setting VITE_USE_MOCK=false. No reconnect/backoff logic yet — out of scope while
  * unused, same posture as realHomeApi's activity feed.
  */
 export const realWanApi: WanApi = {

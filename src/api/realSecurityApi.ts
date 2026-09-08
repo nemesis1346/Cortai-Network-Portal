@@ -17,7 +17,7 @@ import { apiRequest, apiSocket, SITE_ID } from './realApiClient'
  * simulation scenario aren't explicitly enumerated, so their paths are reasonable
  * extrapolations under the same namespace, same posture as realHomeApi/realControlsApi.
  * Not wired in by default — see ./index.ts. Confirm exact response envelopes with
- * Stefan before flipping VITE_API_MODE=real.
+ * Stefan before setting VITE_USE_MOCK=false.
  */
 export const realSecurityApi: SecurityApi = {
   getKpis() {

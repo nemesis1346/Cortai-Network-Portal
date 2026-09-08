@@ -1,56 +1,20 @@
-import type { DeviceApi } from './types'
-import type { HomeApi } from './homeTypes'
-import type { ControlsApi } from './controlsTypes'
-import type { SecurityApi } from './securityTypes'
-import type { InsightsApi } from './insightsTypes'
-import type { WanApi } from './wanTypes'
-import type { ReportApi } from './reportTypes'
-import type { TopologyApi } from './topologyTypes'
-import { mockDeviceApi } from './mockDeviceApi'
-import { realDeviceApi } from './realDeviceApi'
-import { mockHomeApi } from './mockHomeApi'
-import { realHomeApi } from './realHomeApi'
-import { mockControlsApi } from './mockControlsApi'
-import { realControlsApi } from './realControlsApi'
-import { mockSecurityApi } from './mockSecurityApi'
-import { realSecurityApi } from './realSecurityApi'
-import { mockInsightsApi } from './mockInsightsApi'
-import { realInsightsApi } from './realInsightsApi'
-import { mockWanApi } from './mockWanApi'
-import { realWanApi } from './realWanApi'
-import { mockReportApi } from './mockReportApi'
-import { realReportApi } from './realReportApi'
-import { mockTopologyApi } from './mockTopologyApi'
-import { realTopologyApi } from './realTopologyApi'
+import type { PortalApi } from './portalTypes'
+import { mockPortalApi } from './mockPortalApi'
+import { realPortalApi } from './realPortalApi'
 
 /**
- * THE ONE FILE to change when Stefan's CoreTi/FortiManager backend is ready:
- * flip VITE_API_MODE to "real" (see .env.example) — no page/component changes needed.
+ * THE ONE FILE to change when a real backend is ready: set VITE_USE_MOCK=false
+ * (see .env.example) and point `portalApi` at your PortalApi implementation.
+ * No page or component changes needed — they only ever call portalApi.*.
+ *
+ * Defaults to the mock unless VITE_USE_MOCK is explicitly "false", so a checkout
+ * with no .env runs against fixtures.
  */
-export const deviceApi: DeviceApi =
-  import.meta.env.VITE_API_MODE === 'real' ? realDeviceApi : mockDeviceApi
+const USE_MOCK = import.meta.env.VITE_USE_MOCK !== 'false'
 
-export const homeApi: HomeApi =
-  import.meta.env.VITE_API_MODE === 'real' ? realHomeApi : mockHomeApi
+export const portalApi: PortalApi = USE_MOCK ? mockPortalApi : realPortalApi
 
-export const controlsApi: ControlsApi =
-  import.meta.env.VITE_API_MODE === 'real' ? realControlsApi : mockControlsApi
-
-export const securityApi: SecurityApi =
-  import.meta.env.VITE_API_MODE === 'real' ? realSecurityApi : mockSecurityApi
-
-export const insightsApi: InsightsApi =
-  import.meta.env.VITE_API_MODE === 'real' ? realInsightsApi : mockInsightsApi
-
-export const wanApi: WanApi =
-  import.meta.env.VITE_API_MODE === 'real' ? realWanApi : mockWanApi
-
-export const reportApi: ReportApi =
-  import.meta.env.VITE_API_MODE === 'real' ? realReportApi : mockReportApi
-
-export const topologyApi: TopologyApi =
-  import.meta.env.VITE_API_MODE === 'real' ? realTopologyApi : mockTopologyApi
-
+export type { PortalApi } from './portalTypes'
 export * from './types'
 export * from './homeTypes'
 export * from './controlsTypes'

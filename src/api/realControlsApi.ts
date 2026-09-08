@@ -7,7 +7,7 @@ import { apiRequest, SITE_ID } from './realApiClient'
  * ./index.ts. The spec doc is explicit that triage becomes a server-side LLM call
  * with a structured {tier, intent_id, plan[], confidence, requires_approval} output
  * and a low-confidence fallback to Tier 3 — this client just consumes that contract.
- * Confirm exact response envelopes with Stefan before flipping VITE_API_MODE=real.
+ * Confirm exact response envelopes with Stefan before setting VITE_USE_MOCK=false.
  * No WebSocket execution-progress channel yet — out of scope while unused, same
  * posture as realHomeApi's activity feed.
  */

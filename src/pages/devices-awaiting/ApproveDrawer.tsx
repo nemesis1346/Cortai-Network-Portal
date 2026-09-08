@@ -15,16 +15,7 @@ import {
   ModalTitle,
   Select,
 } from '@/components/ui-v2'
-import {
-  ASSIGNABLE_VLANS,
-  OWNER_TYPE_LABEL,
-  VLAN_LABEL,
-  type ApproveRequest,
-  type Device,
-  type OwnerType,
-  type PatchRequest,
-  type Vlan,
-} from '@/api'
+import { ASSIGNABLE_VLANS, OWNER_TYPE_LABEL, VLAN_LABEL, type ApproveRequest, type Device, type OwnerType, type PatchRequest, type Vlan } from '@/api'
 import { connectionLabel, deviceIcon, displayName, formatFirstSeen } from './deviceDisplay'
 
 export type DrawerMode = 'approve' | 'edit'

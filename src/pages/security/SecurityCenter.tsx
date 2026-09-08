@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { securityApi, type SecurityKpis } from '@/api'
+import { portalApi, type SecurityKpis } from '@/api'
 import { Button, Tabs } from '@/components/ui-v2'
 import type { ScreenProps } from '@/shell/nav-data'
 import { AttackOriginsCard } from './AttackOriginsCard'
@@ -29,7 +29,7 @@ export function SecurityCenter(_props: ScreenProps) {
   const [simOpen, setSimOpen] = useState(false)
 
   useEffect(() => {
-    securityApi.getKpis().then(setKpis).catch((err) => setKpisError(errorMessage(err)))
+    portalApi.security.getKpis().then(setKpis).catch((err) => setKpisError(errorMessage(err)))
   }, [])
 
   return (

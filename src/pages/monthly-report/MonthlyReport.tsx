@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { reportApi, type MonthlyReport as MonthlyReportData } from '@/api'
+import { portalApi, type MonthlyReport as MonthlyReportData } from '@/api'
 import type { ScreenProps } from '@/shell/nav-data'
 import { ComparisonCard } from './ComparisonCard'
 import { ReportHeader } from './ReportHeader'
@@ -10,7 +10,7 @@ export function MonthlyReport({ onNavigate }: ScreenProps) {
   const [report, setReport] = useState<MonthlyReportData | null>(null)
 
   useEffect(() => {
-    reportApi.getMonthlyReport().then(setReport)
+    portalApi.report.getMonthlyReport().then(setReport)
   }, [])
 
   if (!report) return null

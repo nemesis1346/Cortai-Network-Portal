@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
-import { securityApi, type ProtectionStackItem } from '@/api'
+import { portalApi, type ProtectionStackItem } from '@/api'
 import { Badge, Card, CardBody, CardHeader, CardTitle } from '@/components/ui-v2'
 
 export function ProtectionStackCard() {
   const [items, setItems] = useState<ProtectionStackItem[] | null>(null)
 
   useEffect(() => {
-    securityApi.getProtectionStack().then(setItems)
+    portalApi.security.getProtectionStack().then(setItems)
   }, [])
 
   return (

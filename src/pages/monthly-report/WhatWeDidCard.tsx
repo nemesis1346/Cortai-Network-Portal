@@ -1,5 +1,5 @@
 import type { ReportHighlight } from '@/api'
-import { reportApi } from '@/api'
+import { portalApi } from '@/api'
 import { Button, Card, CardBody, CardFooter, CardHeader, CardTitle, Icon, IconBadge } from '@/components/ui-v2'
 import { useToast } from '@/components/ui'
 
@@ -11,7 +11,7 @@ export function WhatWeDidCard({ highlights }: WhatWeDidCardProps) {
   const { show: showToast } = useToast()
 
   const downloadPdf = () => {
-    reportApi.exportPdf().then((result) => showToast(result.message))
+    portalApi.report.exportPdf().then((result) => showToast(result.message))
   }
 
   return (

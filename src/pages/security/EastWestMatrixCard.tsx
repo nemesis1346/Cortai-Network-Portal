@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { securityApi, type EastWestMatrix, type EastWestState } from '@/api'
+import { portalApi, type EastWestMatrix, type EastWestState } from '@/api'
 import { Alert, Card, CardBody, CardFooter, CardHeader, CardTitle, Icon, IconBadge, IconButton, Modal } from '@/components/ui-v2'
 
 const CELL_MODIFIER: Record<EastWestState, string> = {
@@ -14,7 +14,7 @@ export function EastWestMatrixCard() {
   const [infoOpen, setInfoOpen] = useState(false)
 
   useEffect(() => {
-    securityApi.getEastWestMatrix().then(setMatrix)
+    portalApi.security.getEastWestMatrix().then(setMatrix)
   }, [])
 
   return (

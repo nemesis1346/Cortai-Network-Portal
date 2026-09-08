@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { deviceApi, insightsApi, type Device, type InsightsData } from '@/api'
+import { portalApi, type Device, type InsightsData } from '@/api'
 import { Select } from '@/components/ui-v2'
 import { displayName } from '@/pages/devices-awaiting/deviceDisplay'
 import { StaffActivityGate } from '@/pages/security/StaffActivityGate'
@@ -19,12 +19,12 @@ export function Insights(_props: ScreenProps) {
   const [data, setData] = useState<InsightsData | null>(null)
 
   useEffect(() => {
-    deviceApi.list({ status: 'approved' }).then((rows) => setLaptops(rows.filter(isLaptop)))
+    portalApi.devices.list({ status: 'approved' }).then((rows) => setLaptops(rows.filter(isLaptop)))
   }, [])
 
   useEffect(() => {
     setData(null)
-    insightsApi.getInsights(scope).then(setData)
+    portalApi.insights.getInsights(scope).then(setData)
   }, [scope])
 
   return (

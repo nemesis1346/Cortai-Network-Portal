@@ -3,7 +3,7 @@
  * used to be 7 near-identical copy-pasted request() helpers into one place.
  * Endpoint shapes across the real-API layer are still unconfirmed extrapolations
  * (see each file's own header comment); confirm with Stefan before flipping
- * VITE_API_MODE=real.
+ * VITE_USE_MOCK=false.
  */
 const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ''
 const WS_BASE_URL = import.meta.env.VITE_WS_BASE_URL ?? ''

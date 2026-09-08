@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { wanApi, type CloudApp, type IspIncident, type LatencySeries, type WanStatus } from '@/api'
+import { portalApi, type CloudApp, type IspIncident, type LatencySeries, type WanStatus } from '@/api'
 import type { ScreenProps } from '@/shell/nav-data'
 import { CloudAppHealthCard } from './CloudAppHealthCard'
 import { IspIncidentsCard } from './IspIncidentsCard'
@@ -16,19 +16,19 @@ export function WanHealth(_props: ScreenProps) {
   const [liveLatencies, setLiveLatencies] = useState<Record<string, number>>({})
 
   useEffect(() => {
-    wanApi.getStatus().then(setStatus)
-    wanApi.getLatencySeries().then(setSeries)
-    wanApi.listCloudApps().then(setApps)
-    wanApi.listIspIncidents().then(setIncidents)
+    portalApi.wan.getStatus().then(setStatus)
+    portalApi.wan.getLatencySeries().then(setSeries)
+    portalApi.wan.listCloudApps().then(setApps)
+    portalApi.wan.listIspIncidents().then(setIncidents)
   }, [])
 
   useEffect(() => {
-    const unsubscribe = wanApi.subscribePrimaryLatency(setPrimaryLatencyMs)
+    const unsubscribe = portalApi.wan.subscribePrimaryLatency(setPrimaryLatencyMs)
     return unsubscribe
   }, [])
 
   useEffect(() => {
-    const unsubscribe = wanApi.subscribeCloudAppLatency((id, ms) => {
+    const unsubscribe = portalApi.wan.subscribeCloudAppLatency((id, ms) => {
       setLiveLatencies((prev) => ({ ...prev, [id]: ms }))
     })
     return unsubscribe

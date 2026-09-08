@@ -16,19 +16,25 @@ npm install
 npm run dev
 ```
 
-Open the printed local URL. The **Network** tab has the real screen; the other
-6 nav tabs are intentionally stubbed "coming soon" — nothing else was in scope
-for this module.
+Open the printed local URL. All 7 nav tabs are built: Command Center, Network
+(devices awaiting registration + topology), Security, Insights, WAN Health,
+Controls and Report.
 
 ## Mock vs real backend
 
-`VITE_API_MODE` (see `.env.example`) controls `src/api/index.ts`, the **one file**
-that changes when Stefan's FortiManager-backed API lands:
+Everything the UI can ask of a backend sits behind **one interface** — `PortalApi`
+in `src/api/portalTypes.ts`. Nothing outside `src/api/` holds data or touches the
+network; pages only ever call `portalApi.<domain>.<method>()`.
 
-- `mock` (default) — `src/api/mockDeviceApi.ts`, an in-memory array seeded with
-  3 example devices, artificial latency, no backend required.
-- `real` — `src/api/realDeviceApi.ts`, a thin `fetch()` client against
-  `GET/POST/PATCH /api/devices/...` per the scope doc's documented contract.
+`VITE_USE_MOCK` (see `.env.example`) controls `src/api/index.ts`, the **one file**
+that changes when a real backend lands:
+
+- unset, or anything other than `"false"` (default) — `src/api/mockPortalApi.ts`,
+  in-memory seeded fixtures with artificial latency, no backend required.
+- `"false"` — `src/api/realPortalApi.ts`, a reference `fetch()`/WebSocket client
+  against extrapolated endpoint shapes. Not confirmed against a real backend —
+  expected to be replaced wholesale by a backend team's own `PortalApi`
+  implementation.
 
 Every mutating action (`approve`/`quarantine`/`block`/`patch`) returns
 `{ device, outcomeMessage }` — the UI always shows the server-authoritative

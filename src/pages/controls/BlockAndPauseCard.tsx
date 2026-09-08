@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Badge, Button, Card, CardBody, CardFooter, CardHeader, CardTitle, Input, Select } from '@/components/ui-v2'
 import { useToast } from '@/components/ui'
-import { controlsApi, deviceApi, type Device } from '@/api'
+import { portalApi, type Device } from '@/api'
 import { displayName } from '@/pages/devices-awaiting/deviceDisplay'
 import { useActionLauncher } from '@/shell/ActionLauncherContext'
 
@@ -23,8 +23,8 @@ export function BlockAndPauseCard({ onChanged }: BlockAndPauseCardProps) {
   const { focusBlockInputRequested, consumeFocusBlockInput } = useActionLauncher()
 
   useEffect(() => {
-    controlsApi.listBlockedDomains().then(setDomains)
-    deviceApi.list({ status: 'approved' }).then((rows) => {
+    portalApi.controls.listBlockedDomains().then(setDomains)
+    portalApi.devices.list({ status: 'approved' }).then((rows) => {
       setDevices(rows)
       setSelectedMac(rows[0]?.mac ?? '')
     })
@@ -43,7 +43,7 @@ export function BlockAndPauseCard({ onChanged }: BlockAndPauseCardProps) {
       showToast('Enter a domain to block')
       return
     }
-    controlsApi.blockDomain(v).then((result) => {
+    portalApi.controls.blockDomain(v).then((result) => {
       setDomains((prev) => [v, ...(prev ?? [])])
       setDomainInput('')
       showToast(result.outcomeMessage)
@@ -52,7 +52,7 @@ export function BlockAndPauseCard({ onChanged }: BlockAndPauseCardProps) {
   }
 
   const unblock = (domain: string) => {
-    controlsApi.unblockDomain(domain).then((result) => {
+    portalApi.controls.unblockDomain(domain).then((result) => {
       setDomains((prev) => prev?.filter((d) => d !== domain) ?? null)
       showToast(result.outcomeMessage)
       onChanged()
@@ -62,7 +62,7 @@ export function BlockAndPauseCard({ onChanged }: BlockAndPauseCardProps) {
   const pause = () => {
     const device = devices?.find((d) => d.mac === selectedMac)
     if (!device) return
-    controlsApi.pauseDevice(device.mac, displayName(device)).then((result) => {
+    portalApi.controls.pauseDevice(device.mac, displayName(device)).then((result) => {
       showToast(result.outcomeMessage)
       onChanged()
     })

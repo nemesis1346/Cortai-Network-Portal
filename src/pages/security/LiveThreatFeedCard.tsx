@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { ACTIVITY_LABEL, securityApi, type ActivityEvent, type ActivityEventKind } from '@/api'
+import { portalApi, ACTIVITY_LABEL, type ActivityEvent, type ActivityEventKind } from '@/api'
 import { Badge, Card, CardBody, CardHeader, CardTitle } from '@/components/ui-v2'
 import { formatEventTime } from '@/pages/command-center/commandCenterDisplay'
 
@@ -15,7 +15,7 @@ export function LiveThreatFeedCard() {
   const [events, setEvents] = useState<ActivityEvent[]>([])
 
   useEffect(() => {
-    return securityApi.subscribeThreatFeed((event) => {
+    return portalApi.security.subscribeThreatFeed((event) => {
       setEvents((prev) => [event, ...prev].slice(0, MAX_ROWS))
     })
   }, [])

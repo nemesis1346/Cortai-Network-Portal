@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Card, CardBody, CardHeader, CardTitle, Toggle } from '@/components/ui-v2'
 import { useToast } from '@/components/ui'
-import { controlsApi, type PolicyToggle } from '@/api'
+import { portalApi, type PolicyToggle } from '@/api'
 
 interface NetworkPoliciesCardProps {
   onChanged: () => void
@@ -12,11 +12,11 @@ export function NetworkPoliciesCard({ onChanged }: NetworkPoliciesCardProps) {
   const { show: showToast } = useToast()
 
   useEffect(() => {
-    controlsApi.listPolicies().then(setPolicies)
+    portalApi.controls.listPolicies().then(setPolicies)
   }, [])
 
   const toggle = (key: string) => {
-    controlsApi.togglePolicy(key).then((result) => {
+    portalApi.controls.togglePolicy(key).then((result) => {
       setPolicies((prev) => prev?.map((p) => (p.key === key ? result.policy : p)) ?? null)
       showToast(result.outcomeMessage)
       onChanged()

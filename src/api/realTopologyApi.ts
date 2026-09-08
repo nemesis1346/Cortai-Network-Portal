@@ -5,7 +5,7 @@ import { apiRequest, SITE_ID } from './realApiClient'
  * Thin fetch() wrapper against a proposed /topology/ namespace — same
  * extrapolation convention as the other real-API files. Not wired in by
  * default — see ./index.ts. Confirm exact response envelopes with Stefan
- * before flipping VITE_API_MODE=real.
+ * before setting VITE_USE_MOCK=false.
  */
 export const realTopologyApi: TopologyApi = {
   listInfraNodes() {

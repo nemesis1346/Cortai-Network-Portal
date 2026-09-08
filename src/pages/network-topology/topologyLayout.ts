@@ -28,7 +28,7 @@ export interface NodeCardConfig {
 
 /** Presentational card content (kicker label + tag badges), hand-authored in
  * the HTML alongside the node's position — a distinct, static counterpart to
- * the fetched drawer content (topologyApi's InfraNode/ClusterNode). */
+ * the fetched drawer content (portalApi.topology's InfraNode/ClusterNode). */
 export const NODE_CARDS: NodeCardConfig[] = [
   { key: 'internet', x: 60, y: 370, w: 148, variant: 'hub', tags: [{ variant: 'neutral', label: 'WAN' }] },
   { key: 'gateway', x: 273, y: 356, w: 224, kicker: 'Gateway', tags: [{ variant: 'neutral', label: 'FG40F-MAINLAN' }] },

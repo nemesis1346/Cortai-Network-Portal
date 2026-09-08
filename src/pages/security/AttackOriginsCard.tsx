@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { securityApi, type AttackOrigin } from '@/api'
+import { portalApi, type AttackOrigin } from '@/api'
 import { Badge, Card, CardBody, CardHeader, CardTitle, Segmented } from '@/components/ui-v2'
 
 const RANGE_OPTIONS = [
@@ -12,7 +12,7 @@ export function AttackOriginsCard() {
   const [range, setRange] = useState('7d')
 
   useEffect(() => {
-    securityApi.getAttackOrigins().then(setOrigins)
+    portalApi.security.getAttackOrigins().then(setOrigins)
   }, [])
 
   const total = origins?.reduce((sum, o) => sum + o.count, 0) ?? 0

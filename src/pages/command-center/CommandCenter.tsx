@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { homeApi, type AttentionItem, type Briefing, type HomeHealth, type HomeKpis } from '@/api'
+import { portalApi, type AttentionItem, type Briefing, type HomeHealth, type HomeKpis } from '@/api'
 import type { ScreenProps } from '@/shell/nav-data'
 import { AwaitingMiniCard } from './AwaitingMiniCard'
 import { BriefingCard } from './BriefingCard'
@@ -24,10 +24,10 @@ export function CommandCenter({ onNavigate }: ScreenProps) {
   const [attentionError, setAttentionError] = useState<string | null>(null)
 
   useEffect(() => {
-    homeApi.getBriefing().then(setBriefing).catch((err) => setBriefingError(errorMessage(err)))
-    homeApi.getKpis('1d').then(setKpis).catch((err) => setKpisError(errorMessage(err)))
-    homeApi.getHealth().then(setHealth).catch((err) => setHealthError(errorMessage(err)))
-    homeApi.listAttention().then(setAttention).catch((err) => setAttentionError(errorMessage(err)))
+    portalApi.home.getBriefing().then(setBriefing).catch((err) => setBriefingError(errorMessage(err)))
+    portalApi.home.getKpis('1d').then(setKpis).catch((err) => setKpisError(errorMessage(err)))
+    portalApi.home.getHealth().then(setHealth).catch((err) => setHealthError(errorMessage(err)))
+    portalApi.home.listAttention().then(setAttention).catch((err) => setAttentionError(errorMessage(err)))
   }, [])
 
   return (

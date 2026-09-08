@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { homeApi, type AttentionItem } from '@/api'
+import { portalApi, type AttentionItem } from '@/api'
 import {
   Alert,
   Button,
@@ -24,7 +24,7 @@ export function AlertsModal({ open, onClose, onNavigate }: AlertsModalProps) {
 
   useEffect(() => {
     if (!open) return
-    homeApi.listAttention().then(setItems)
+    portalApi.home.listAttention().then(setItems)
   }, [open])
 
   return (

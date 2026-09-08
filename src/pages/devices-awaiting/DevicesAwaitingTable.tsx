@@ -13,7 +13,7 @@ import {
   type TableColumn,
 } from '@/components/ui-v2'
 import { useToast } from '@/components/ui'
-import { deviceApi, VLAN_LABEL, type Device, type DeviceStatus } from '@/api'
+import { portalApi, VLAN_LABEL, type Device, type DeviceStatus } from '@/api'
 import type { ScreenProps } from '@/shell/nav-data'
 import { ApproveDrawer, type DrawerMode } from './ApproveDrawer'
 import { connectionLabel, formatFirstSeen, statusBadgeVariant, statusLabel } from './deviceDisplay'
@@ -42,7 +42,7 @@ export function DevicesAwaitingTable(_props: ScreenProps) {
 
   const load = useCallback(() => {
     let cancelled = false
-    deviceApi
+    portalApi.devices
       .list({})
       .then((rows) => {
         if (cancelled) return
@@ -124,7 +124,7 @@ export function DevicesAwaitingTable(_props: ScreenProps) {
               variant="secondary"
               size="xs"
               onClick={() =>
-                deviceApi.quarantine(d.mac).then((r) => {
+                portalApi.devices.quarantine(d.mac).then((r) => {
                   showToast(r.outcomeMessage)
                   load()
                 })
@@ -136,7 +136,7 @@ export function DevicesAwaitingTable(_props: ScreenProps) {
               variant="danger"
               size="xs"
               onClick={() =>
-                deviceApi.block(d.mac).then((r) => {
+                portalApi.devices.block(d.mac).then((r) => {
                   showToast(r.outcomeMessage)
                   load()
                 })
@@ -185,28 +185,28 @@ export function DevicesAwaitingTable(_props: ScreenProps) {
         mode={drawerMode}
         onClose={closeDrawer}
         onApprove={(body) =>
-          deviceApi.approve(selectedDevice!.mac, body).then((r) => {
+          portalApi.devices.approve(selectedDevice!.mac, body).then((r) => {
             showToast(r.outcomeMessage)
             closeDrawer()
             load()
           })
         }
         onQuarantine={() =>
-          deviceApi.quarantine(selectedDevice!.mac).then((r) => {
+          portalApi.devices.quarantine(selectedDevice!.mac).then((r) => {
             showToast(r.outcomeMessage)
             closeDrawer()
             load()
           })
         }
         onBlock={() =>
-          deviceApi.block(selectedDevice!.mac).then((r) => {
+          portalApi.devices.block(selectedDevice!.mac).then((r) => {
             showToast(r.outcomeMessage)
             closeDrawer()
             load()
           })
         }
         onSave={(body) =>
-          deviceApi.patch(selectedDevice!.mac, body).then((r) => {
+          portalApi.devices.patch(selectedDevice!.mac, body).then((r) => {
             showToast(r.outcomeMessage)
             closeDrawer()
             load()

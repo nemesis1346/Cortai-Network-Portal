@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useToast } from '@/components/ui'
-import { controlsApi, securityApi, type ChangeRecord, type SimulationScenario } from '@/api'
+import { portalApi, type ChangeRecord, type SimulationScenario } from '@/api'
 import { ChangeDetailModal } from '@/pages/controls/ChangeDetailModal'
 import {
   Badge,
@@ -36,7 +36,7 @@ export function AttackSimulationCard({ open, onClose }: AttackSimulationCardProp
   const { show: showToast } = useToast()
 
   useEffect(() => {
-    securityApi.getSimulationScenario().then(setScenario)
+    portalApi.security.getSimulationScenario().then(setScenario)
   }, [])
 
   // Keep the same non-zero stepCount across 'running' -> 'done' so useStepRunner's
@@ -49,7 +49,7 @@ export function AttackSimulationCard({ open, onClose }: AttackSimulationCardProp
     setRecord(null)
     const per = prefersReducedMotion() ? 80 : 900
     await new Promise((resolve) => setTimeout(resolve, scenario.steps.length * per + 300))
-    const rec = await controlsApi.logContainment({
+    const rec = await portalApi.controls.logContainment({
       title: scenario.journal_title,
       rationale: scenario.journal_rationale,
       steps: scenario.steps.map((s) => ({ state: s.tone === 'warn' ? 'warn' : 'ok', label: `${s.time} — ${s.description}` })),

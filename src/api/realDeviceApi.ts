@@ -11,7 +11,7 @@ import { apiRequest } from './realApiClient'
 /**
  * Thin fetch() wrapper against Stefan's CoreTi backend (FortiManager integration).
  * Not wired in by default — see ./index.ts. Endpoint shapes per the Module 1 scope doc;
- * confirm exact response envelopes with Stefan before flipping VITE_API_MODE=real.
+ * confirm exact response envelopes with Stefan before setting VITE_USE_MOCK=false.
  */
 export const realDeviceApi: DeviceApi = {
   list({ status }: ListDevicesParams) {

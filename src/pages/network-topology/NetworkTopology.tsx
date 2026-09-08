@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { topologyApi, type ClusterNode, type DeviceDetail, type InfraNode } from '@/api'
+import { portalApi, type ClusterNode, type DeviceDetail, type InfraNode } from '@/api'
 import { NetworkPanel, type PanelState } from './NetworkPanel'
 import { TopologyCanvas } from './TopologyCanvas'
 
@@ -12,9 +12,9 @@ export function NetworkTopology() {
   const [panel, setPanel] = useState<PanelState | null>(null)
 
   useEffect(() => {
-    topologyApi.listInfraNodes().then(setInfraNodes)
-    topologyApi.listClusterNodes().then(setClusterNodes)
-    topologyApi.listDeviceDetails().then(setDeviceDetails)
+    portalApi.topology.listInfraNodes().then(setInfraNodes)
+    portalApi.topology.listClusterNodes().then(setClusterNodes)
+    portalApi.topology.listDeviceDetails().then(setDeviceDetails)
   }, [])
 
   const close = () => setPanel(null)

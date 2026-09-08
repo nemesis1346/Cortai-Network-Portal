@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useToast } from '@/components/ui'
-import { deviceApi, type Device } from '@/api'
+import { portalApi, type Device } from '@/api'
 import { connectionLabel, deviceIcon, formatFirstSeen } from '@/pages/devices-awaiting/deviceDisplay'
 import {
   Alert,
@@ -27,7 +27,7 @@ export function AwaitingMiniCard({ onNavigate }: AwaitingMiniCardProps) {
   const { show: showToast } = useToast()
 
   const load = useCallback(() => {
-    deviceApi.list({ status: 'awaiting' }).then(setDevices)
+    portalApi.devices.list({ status: 'awaiting' }).then(setDevices)
   }, [])
 
   useEffect(() => load(), [load])
@@ -35,7 +35,7 @@ export function AwaitingMiniCard({ onNavigate }: AwaitingMiniCardProps) {
   if (!devices || devices.length === 0) return null
 
   const block = (mac: string) => {
-    deviceApi.block(mac).then((result) => {
+    portalApi.devices.block(mac).then((result) => {
       showToast(result.outcomeMessage)
       load()
     })

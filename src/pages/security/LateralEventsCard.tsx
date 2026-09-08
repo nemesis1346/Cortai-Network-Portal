@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { securityApi, type LateralEvent, type LateralSeverity } from '@/api'
+import { portalApi, type LateralEvent, type LateralSeverity } from '@/api'
 import { Alert, Card, CardBody, CardHeader, CardTitle, Icon, IconBadge, IconButton, Modal } from '@/components/ui-v2'
 
 const SEVERITY_ICON: Record<LateralSeverity, string> = {
@@ -19,7 +19,7 @@ export function LateralEventsCard() {
   const [infoOpen, setInfoOpen] = useState(false)
 
   useEffect(() => {
-    securityApi.listLateralEvents().then(setEvents)
+    portalApi.security.listLateralEvents().then(setEvents)
   }, [])
 
   return (

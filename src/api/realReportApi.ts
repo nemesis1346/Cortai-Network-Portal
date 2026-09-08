@@ -5,7 +5,7 @@ import { apiRequest, SITE_ID } from './realApiClient'
  * Thin fetch() wrapper against a proposed /reports/ namespace — the spec doc doesn't
  * enumerate Report endpoints explicitly, so these paths are a reasonable extrapolation
  * under the same convention as the other real-API files. Not wired in by default — see
- * ./index.ts. Confirm exact response envelopes with Stefan before flipping VITE_API_MODE=real.
+ * ./index.ts. Confirm exact response envelopes with Stefan before setting VITE_USE_MOCK=false.
  */
 export const realReportApi: ReportApi = {
   getMonthlyReport() {

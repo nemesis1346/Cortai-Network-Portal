@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Badge, Card, CardHeader, CardTitle } from '@/components/ui-v2'
 import { useToast } from '@/components/ui'
-import { controlsApi, type ChangeRecord, type TriageResult } from '@/api'
+import { portalApi, type ChangeRecord, type TriageResult } from '@/api'
 import type { ScreenProps } from '@/shell/nav-data'
 import { BlockAndPauseCard } from './BlockAndPauseCard'
 import { ChangeDetailModal } from './ChangeDetailModal'
@@ -25,7 +25,7 @@ export function Controls(_props: ScreenProps) {
   const { show: showToast } = useToast()
 
   const reloadChanges = useCallback(() => {
-    controlsApi.listChanges().then(setChanges)
+    portalApi.controls.listChanges().then(setChanges)
   }, [])
 
   useEffect(() => reloadChanges(), [reloadChanges])
@@ -40,7 +40,7 @@ export function Controls(_props: ScreenProps) {
     setTriaging(true)
     setRecord(null)
     setRunning(false)
-    controlsApi.triage(description).then((result) => {
+    portalApi.controls.triage(description).then((result) => {
       setTriage(result)
       setTriaging(false)
     })
@@ -49,7 +49,7 @@ export function Controls(_props: ScreenProps) {
   const handleRun = () => {
     if (!triage?.intent) return
     setRunning(true)
-    controlsApi.runChange(triage).then((rec) => {
+    portalApi.controls.runChange(triage).then((rec) => {
       setRecord(rec)
       setRunning(false)
       reloadChanges()
@@ -69,7 +69,7 @@ export function Controls(_props: ScreenProps) {
 
   const handleSchedule = () => {
     if (!triage) return
-    controlsApi.scheduleChange(triage).then(() => {
+    portalApi.controls.scheduleChange(triage).then(() => {
       closeGuard()
       reloadChanges()
       showToast('Scheduled for 4:00 AM — new passphrase and QR poster ready before the morning shift')
@@ -79,7 +79,7 @@ export function Controls(_props: ScreenProps) {
   const handleSendToEngineer = () => {
     if (!triage) return
     const isWorkOrder = triage.tier === 4
-    controlsApi.submitToEngineer(triage).then(() => {
+    portalApi.controls.submitToEngineer(triage).then(() => {
       closeGuard()
       reloadChanges()
       showToast(isWorkOrder ? "Work order opened — we'll call to schedule the visit" : "Submitted with Guardian's prepared change plan attached")
@@ -88,7 +88,7 @@ export function Controls(_props: ScreenProps) {
 
   const handleUnblock = () => {
     if (!triage) return
-    controlsApi.unblockFromDiagnosis(triage.description).then(() => {
+    portalApi.controls.unblockFromDiagnosis(triage.description).then(() => {
       closeGuard()
       reloadChanges()
       showToast('Unblocked for the staff VLAN — live in 8 s, logged as a policy exception')
@@ -101,7 +101,7 @@ export function Controls(_props: ScreenProps) {
   }
 
   const handleReverse = (num: number) => {
-    controlsApi.reverseChange(num).then((rec) => {
+    portalApi.controls.reverseChange(num).then((rec) => {
       reloadChanges()
       setDetailNum(num)
       if (record?.num === num) closeGuard()
