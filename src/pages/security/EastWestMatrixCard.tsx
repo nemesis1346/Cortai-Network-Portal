@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { portalApi, type EastWestMatrix, type EastWestState } from '@/api'
-import { Alert, Card, CardBody, CardFooter, CardHeader, CardTitle, Icon, IconBadge, IconButton, Modal } from '@/components/ui-v2'
+import { errorMessage, portalApi, type EastWestMatrix, type EastWestState } from '@/api'
+import { Alert, Card, CardBody, CardFooter, CardHeader, CardTitle, Icon, IconBadge, IconButton, Modal, Unavailable } from '@/components/ui-v2'
 
 const CELL_MODIFIER: Record<EastWestState, string> = {
   ok: ' matrix__cell--allowed',
@@ -11,10 +11,14 @@ const CELL_MODIFIER: Record<EastWestState, string> = {
 
 export function EastWestMatrixCard() {
   const [matrix, setMatrix] = useState<EastWestMatrix | null>(null)
+  const [matrixReason, setMatrixReason] = useState<string | null>(null)
   const [infoOpen, setInfoOpen] = useState(false)
 
   useEffect(() => {
-    portalApi.security.getEastWestMatrix().then(setMatrix)
+    portalApi.security
+      .getEastWestMatrix()
+      .then(setMatrix)
+      .catch((err) => setMatrixReason(errorMessage(err)))
   }, [])
 
   return (
@@ -28,50 +32,56 @@ export function EastWestMatrixCard() {
         </IconButton>
       </CardHeader>
       <CardBody>
-        {matrix && (
-          <div className="matrix">
-            <div className="matrix__head">
-              <span />
-              {matrix.segments.map((seg) => (
-                <span key={seg} className="matrix__col">
-                  {seg}
-                </span>
-              ))}
-            </div>
-            {matrix.rows.map((row, i) => (
-              <div key={matrix.segments[i]} className="matrix__row">
-                <span className="matrix__rowhead">{matrix.segments[i]}</span>
-                {row.map((c, j) => (
-                  <div key={`${matrix.segments[i]}-${matrix.segments[j]}`} className={`matrix__cell${CELL_MODIFIER[c.state]}`} title={c.tooltip}>
-                    <b>{c.value}</b>
-                    <span>{c.label}</span>
-                  </div>
+        {matrixReason ? (
+          <Unavailable title="East-west traffic unavailable" reason={matrixReason} icon="network" />
+        ) : (
+          matrix && (
+            <div className="matrix">
+              <div className="matrix__head">
+                <span />
+                {matrix.segments.map((seg) => (
+                  <span key={seg} className="matrix__col">
+                    {seg}
+                  </span>
                 ))}
               </div>
-            ))}
-          </div>
+              {matrix.rows.map((row, i) => (
+                <div key={matrix.segments[i]} className="matrix__row">
+                  <span className="matrix__rowhead">{matrix.segments[i]}</span>
+                  {row.map((c, j) => (
+                    <div key={`${matrix.segments[i]}-${matrix.segments[j]}`} className={`matrix__cell${CELL_MODIFIER[c.state]}`} title={c.tooltip}>
+                      <b>{c.value}</b>
+                      <span>{c.label}</span>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          )
         )}
       </CardBody>
-      <CardFooter>
-        <div className="matrix__legend">
-          <span>
-            <i className="matrix__swatch matrix__swatch--allowed" />
-            Allowed by policy
-          </span>
-          <span>
-            <i className="matrix__swatch matrix__swatch--blocked" />
-            Attempts blocked
-          </span>
-          <span>
-            <i className="matrix__swatch" />
-            Isolated — no path exists
-          </span>
-          <span>
-            <i className="matrix__swatch" style={{ borderStyle: 'dashed' }} />
-            Within own segment
-          </span>
-        </div>
-      </CardFooter>
+      {!matrixReason && (
+        <CardFooter>
+          <div className="matrix__legend">
+            <span>
+              <i className="matrix__swatch matrix__swatch--allowed" />
+              Allowed by policy
+            </span>
+            <span>
+              <i className="matrix__swatch matrix__swatch--blocked" />
+              Attempts blocked
+            </span>
+            <span>
+              <i className="matrix__swatch" />
+              Isolated — no path exists
+            </span>
+            <span>
+              <i className="matrix__swatch" style={{ borderStyle: 'dashed' }} />
+              Within own segment
+            </span>
+          </div>
+        </CardFooter>
+      )}
 
       <Modal open={infoOpen} onClose={() => setInfoOpen(false)} size="xs" label="East-west traffic" bare>
         <Alert

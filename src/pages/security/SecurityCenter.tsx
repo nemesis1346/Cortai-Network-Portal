@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { portalApi, type SecurityKpis } from '@/api'
+import { errorMessage, portalApi, type SecurityKpis } from '@/api'
 import { Button, Tabs } from '@/components/ui-v2'
 import type { ScreenProps } from '@/shell/nav-data'
 import { AttackOriginsCard } from './AttackOriginsCard'
@@ -17,10 +17,6 @@ const TABS = [
   { key: 'threats', label: 'Threats & east-west' },
   { key: 'staff', label: 'Staff activity' },
 ]
-
-function errorMessage(err: unknown): string {
-  return err instanceof Error ? err.message : 'Failed to load.'
-}
 
 export function SecurityCenter(_props: ScreenProps) {
   const [subTab, setSubTab] = useState<SubTab>('threats')
