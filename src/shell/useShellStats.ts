@@ -24,8 +24,9 @@ export function useShellStats(): ShellStats {
     portalApi.home.listAttention().then((items) =>
       setStats((prev) => ({ ...prev, alerts: items.length })),
     )
-    portalApi.wan.getStatus().then((status) =>
-      setStats((prev) => ({ ...prev, throughputMbps: status.primary.downMbps })),
+    portalApi.wan.getStatus().then(
+      (status) => setStats((prev) => ({ ...prev, throughputMbps: status.primary.downMbps })),
+      () => {},
     )
   }, [])
 
