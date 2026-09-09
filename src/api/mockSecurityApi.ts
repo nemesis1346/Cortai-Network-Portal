@@ -1,14 +1,6 @@
-import type {
-  AttackOrigin,
-  EastWestCell,
-  EastWestMatrix,
-  LateralEvent,
-  ProtectionStackItem,
-  SecurityApi,
-  SecurityKpis,
-  SimulationScenario,
-} from './securityTypes'
+import type { LateralEvent, ProtectionStackItem, SecurityApi, SecurityKpis, SimulationScenario } from './securityTypes'
 import { subscribeToActivityFeed } from './mockActivityFeed'
+import { unavailable } from './unavailableError'
 
 const NETWORK_DELAY_MS = 280
 
@@ -32,74 +24,6 @@ const SEED_PROTECTION_STACK: ProtectionStackItem[] = [
   { label: 'Application control', detail: 'Shadow-IT visibility per device' },
   { label: 'Network segmentation', detail: 'Cameras & door access isolated' },
 ]
-
-const SEED_ATTACK_ORIGINS: AttackOrigin[] = [
-  { country: 'Russia', count: 412, bar_percent: 88 },
-  { country: 'China', count: 301, bar_percent: 64 },
-  { country: 'United States', count: 178, bar_percent: 38 },
-  { country: 'Netherlands', count: 112, bar_percent: 24 },
-  { country: 'Vietnam', count: 84, bar_percent: 18 },
-  { country: 'Other', count: 197, bar_percent: 16 },
-]
-
-function cell(state: EastWestCell['state'], value: string, label: string, tooltip = ''): EastWestCell {
-  return { state, value, label, tooltip }
-}
-
-/** Ported exactly from the mockup's #scr-sec east-west matrix (36 cells) — blank tooltips left blank, none invented. */
-const SEED_MATRIX: EastWestMatrix = {
-  segments: ['Corp', 'Guest', 'Cameras', 'Access', 'Media', 'Mgmt'],
-  rows: [
-    [
-      cell('self', '12 Mb', 'normal', 'Corp ↔ Corp — file/print, normal'),
-      cell('iso', '—', 'isolated', 'Corp → Guest — no path exists'),
-      cell('ok', '2 dev', 'allowed', 'Corp → Cameras — only 2 permitted viewing devices'),
-      cell('iso', '—', 'isolated', 'Corp → Access control — no path'),
-      cell('iso', '—', 'isolated', 'Corp → Media — no path'),
-      cell('blkd', '3 ✕', 'blocked', 'Corp → Management — 3 blocked attempts this week (LT-07)'),
-    ],
-    [
-      cell('blkd', '7 ✕', 'blocked', 'Guest → Corp — 7 probes blocked (normal background)'),
-      cell('self', 'client-iso', 'enforced', "Guest ↔ Guest — client isolation ON: guests can't even see each other"),
-      cell('iso', '—', 'isolated'),
-      cell('iso', '—', 'isolated'),
-      cell('iso', '—', 'isolated'),
-      cell('iso', '—', 'isolated'),
-    ],
-    [
-      cell('blkd', '1 ✕', 'blocked', 'Cameras → Corp — 1 attempt by CAM-02 firmware, blocked'),
-      cell('iso', '—', 'isolated'),
-      cell('self', '18 Mb', 'normal', 'Cameras ↔ NVR — recording traffic, normal'),
-      cell('iso', '—', 'isolated'),
-      cell('iso', '—', 'isolated'),
-      cell('iso', '—', 'isolated'),
-    ],
-    [
-      cell('iso', '—', 'isolated'),
-      cell('iso', '—', 'isolated'),
-      cell('iso', '—', 'isolated'),
-      cell('self', 'hb', 'normal', 'Keypads ↔ IoT gateway — heartbeats only'),
-      cell('iso', '—', 'isolated'),
-      cell('iso', '—', 'isolated'),
-    ],
-    [
-      cell('blkd', '2 ✕', 'blocked', 'Media → Corp — breakroom TV device-discovery probes, blocked ×2'),
-      cell('iso', '—', 'isolated'),
-      cell('iso', '—', 'isolated'),
-      cell('iso', '—', 'isolated'),
-      cell('self', '4 Mb', 'normal', 'Media ↔ Media — casting within the segment'),
-      cell('iso', '—', 'isolated'),
-    ],
-    [
-      cell('ok', 'mon', 'allowed', 'Management → all — our monitoring, read-mostly'),
-      cell('ok', 'mon', 'allowed'),
-      cell('ok', 'mon', 'allowed'),
-      cell('ok', 'mon', 'allowed'),
-      cell('ok', 'mon', 'allowed'),
-      cell('self', '—', '—'),
-    ],
-  ],
-}
 
 const SEED_LATERAL_EVENTS: LateralEvent[] = [
   {
@@ -189,12 +113,12 @@ export const mockSecurityApi: SecurityApi = {
     return delay(SEED_PROTECTION_STACK.map((s) => ({ ...s })))
   },
 
-  async getAttackOrigins() {
-    return delay(SEED_ATTACK_ORIGINS.map((o) => ({ ...o })))
+  getAttackOrigins() {
+    return unavailable("No threat-intelligence feed is wired up yet — attack-origin geolocation isn't available.")
   },
 
-  async getEastWestMatrix() {
-    return delay({ segments: [...SEED_MATRIX.segments], rows: SEED_MATRIX.rows.map((row) => row.map((c) => ({ ...c }))) })
+  getEastWestMatrix() {
+    return unavailable("No switch/segment telemetry is configured yet — east-west traffic can't be measured.")
   },
 
   async listLateralEvents() {
