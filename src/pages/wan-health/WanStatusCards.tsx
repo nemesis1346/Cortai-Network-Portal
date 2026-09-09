@@ -1,15 +1,24 @@
 import type { WanStatus } from '@/api'
-import { Badge, Card, CardHeader, Ring } from '@/components/ui-v2'
+import { Badge, Card, CardHeader, Ring, Unavailable } from '@/components/ui-v2'
 
 interface WanStatusCardsProps {
   status: WanStatus | null
+  statusReason: string | null
   primaryLatencyMs: number | null
 }
 
-export function WanStatusCards({ status, primaryLatencyMs }: WanStatusCardsProps) {
+export function WanStatusCards({ status, statusReason, primaryLatencyMs }: WanStatusCardsProps) {
   const primary = status?.primary
   const backup = status?.backup
   const latency = primaryLatencyMs ?? primary?.latencyMs
+
+  if (statusReason) {
+    return (
+      <Card variant="plain" style={{ gridColumn: '1 / -1' }}>
+        <Unavailable title="WAN status unavailable" reason={statusReason} icon="wifi-off" />
+      </Card>
+    )
+  }
 
   return (
     <>

@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import type { CloudApp } from '@/api'
-import { Badge, Card, CardBody, CardHeader, CardTitle, Segmented } from '@/components/ui-v2'
+import { Badge, Card, CardBody, CardHeader, CardTitle, Segmented, Unavailable } from '@/components/ui-v2'
 import { AppDeviceRow } from './AppDeviceRow'
 import { WhoIsUsingItModal } from './WhoIsUsingItModal'
 
 interface CloudAppHealthCardProps {
   apps: CloudApp[] | null
+  appsReason: string | null
   liveLatencies: Record<string, number>
 }
 
@@ -16,9 +17,22 @@ const RANGE_OPTIONS = [
 
 const GRID_TEMPLATE = '530fr 180fr 110fr 110fr 120fr'
 
-export function CloudAppHealthCard({ apps, liveLatencies }: CloudAppHealthCardProps) {
+export function CloudAppHealthCard({ apps, appsReason, liveLatencies }: CloudAppHealthCardProps) {
   const [range, setRange] = useState('7d')
   const [selectedApp, setSelectedApp] = useState<CloudApp | null>(null)
+
+  if (appsReason) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Cloud application health</CardTitle>
+        </CardHeader>
+        <CardBody>
+          <Unavailable title="Cloud application health unavailable" reason={appsReason} icon="cloud-off" />
+        </CardBody>
+      </Card>
+    )
+  }
 
   return (
     <Card>

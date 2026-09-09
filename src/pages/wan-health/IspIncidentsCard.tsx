@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { IspIncident } from '@/api'
-import { Card, CardBody, CardHeader, CardTitle, EventList, Segmented } from '@/components/ui-v2'
+import { Card, CardBody, CardHeader, CardTitle, EventList, Segmented, Unavailable } from '@/components/ui-v2'
 
 const RANGE_OPTIONS = [
   { key: '30d', label: '30d' },
@@ -9,10 +9,24 @@ const RANGE_OPTIONS = [
 
 interface IspIncidentsCardProps {
   incidents: IspIncident[] | null
+  incidentsReason: string | null
 }
 
-export function IspIncidentsCard({ incidents }: IspIncidentsCardProps) {
+export function IspIncidentsCard({ incidents, incidentsReason }: IspIncidentsCardProps) {
   const [range, setRange] = useState('30d')
+
+  if (incidentsReason) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>ISP incidents we handled</CardTitle>
+        </CardHeader>
+        <CardBody>
+          <Unavailable title="ISP incidents unavailable" reason={incidentsReason} />
+        </CardBody>
+      </Card>
+    )
+  }
 
   return (
     <Card>
