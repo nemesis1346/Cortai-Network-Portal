@@ -15,6 +15,8 @@ const USE_MOCK = import.meta.env.VITE_USE_MOCK !== 'false'
 export const portalApi: PortalApi = USE_MOCK ? mockPortalApi : realPortalApi
 
 export type { PortalApi } from './portalTypes'
+export * from './unavailableError'
+export * from './errorMessage'
 export * from './types'
 export * from './homeTypes'
 export * from './controlsTypes'
