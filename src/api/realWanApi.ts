@@ -1,5 +1,6 @@
-import type { CloudApp, IspIncident, LatencySeries, WanApi, WanStatus } from './wanTypes'
+import type { LatencySeries, WanApi } from './wanTypes'
 import { apiRequest, apiSocket, SITE_ID } from './realApiClient'
+import { unavailable } from './unavailableError'
 
 /**
  * Thin fetch()/WebSocket wrapper against a proposed /wan/ namespace — the spec doc
@@ -8,10 +9,15 @@ import { apiRequest, apiSocket, SITE_ID } from './realApiClient'
  * by default — see ./index.ts. Confirm exact response envelopes with Stefan before
  * setting VITE_USE_MOCK=false. No reconnect/backoff logic yet — out of scope while
  * unused, same posture as realHomeApi's activity feed.
+ *
+ * getStatus/listCloudApps/listIspIncidents are hard-coded unavailable below —
+ * this pilot site has no WAN probe, cloud-app health, or ISP-incident source
+ * yet, and there's nothing to extrapolate a real call against. Wire them to a
+ * real endpoint once that source exists.
  */
 export const realWanApi: WanApi = {
   getStatus() {
-    return apiRequest<WanStatus>(`/api/v1/sites/${SITE_ID}/wan/status`)
+    return unavailable('No WAN probe agent is deployed at this site yet — latency, jitter, loss and uptime require it.')
   },
 
   getLatencySeries() {
@@ -19,11 +25,11 @@ export const realWanApi: WanApi = {
   },
 
   listCloudApps() {
-    return apiRequest<CloudApp[]>(`/api/v1/sites/${SITE_ID}/wan/apps`)
+    return unavailable('No cloud-app health integration is configured for this site yet.')
   },
 
   listIspIncidents() {
-    return apiRequest<IspIncident[]>(`/api/v1/sites/${SITE_ID}/wan/incidents`)
+    return unavailable('No ISP incident feed is configured for this site yet.')
   },
 
   subscribePrimaryLatency(onTick) {

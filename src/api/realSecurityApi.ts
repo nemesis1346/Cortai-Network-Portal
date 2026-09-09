@@ -1,14 +1,7 @@
 import type { ActivityEvent } from './homeTypes'
-import type {
-  AttackOrigin,
-  EastWestMatrix,
-  LateralEvent,
-  ProtectionStackItem,
-  SecurityApi,
-  SecurityKpis,
-  SimulationScenario,
-} from './securityTypes'
+import type { LateralEvent, ProtectionStackItem, SecurityApi, SecurityKpis, SimulationScenario } from './securityTypes'
 import { apiRequest, apiSocket, SITE_ID } from './realApiClient'
+import { unavailable } from './unavailableError'
 
 /**
  * Thin fetch()/WebSocket wrapper against the security endpoints proposed in
@@ -18,6 +11,11 @@ import { apiRequest, apiSocket, SITE_ID } from './realApiClient'
  * extrapolations under the same namespace, same posture as realHomeApi/realControlsApi.
  * Not wired in by default — see ./index.ts. Confirm exact response envelopes with
  * Stefan before setting VITE_USE_MOCK=false.
+ *
+ * getAttackOrigins/getEastWestMatrix are hard-coded unavailable below — this
+ * pilot site has no threat-intel feed or switch/segment telemetry configured
+ * yet, regardless of whether the /east-west route above is confirmed. Wire
+ * them to a real call once that source exists.
  */
 export const realSecurityApi: SecurityApi = {
   getKpis() {
@@ -29,11 +27,11 @@ export const realSecurityApi: SecurityApi = {
   },
 
   getAttackOrigins() {
-    return apiRequest<AttackOrigin[]>(`/api/v1/sites/${SITE_ID}/security/attack-origins`)
+    return unavailable("No threat-intelligence feed is wired up yet — attack-origin geolocation isn't available.")
   },
 
   getEastWestMatrix() {
-    return apiRequest<EastWestMatrix>(`/api/v1/sites/${SITE_ID}/east-west`)
+    return unavailable("No switch/segment telemetry is configured yet — east-west traffic can't be measured.")
   },
 
   listLateralEvents() {
