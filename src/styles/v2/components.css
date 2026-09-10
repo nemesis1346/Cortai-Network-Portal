@@ -26,6 +26,13 @@
   isolation: isolate;
 }
 
+.login-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+}
+
 .app-glow {
   position: fixed;
   inset-block-start: -673px;

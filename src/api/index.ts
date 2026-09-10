@@ -16,7 +16,9 @@ export const portalApi: PortalApi = USE_MOCK ? mockPortalApi : realPortalApi
 
 export type { PortalApi } from './portalTypes'
 export * from './unavailableError'
+export * from './invalidCodeError'
 export * from './errorMessage'
+export * from './authTypes'
 export * from './types'
 export * from './homeTypes'
 export * from './controlsTypes'

@@ -1,4 +1,5 @@
 import type { PortalApi } from './portalTypes'
+import { realAuthApi } from './realAuthApi'
 import { realDeviceApi } from './realDeviceApi'
 import { realHomeApi } from './realHomeApi'
 import { realControlsApi } from './realControlsApi'
@@ -16,6 +17,7 @@ import { realTopologyApi } from './realTopologyApi'
  * wholesale with their own implementation of PortalApi.
  */
 export const realPortalApi: PortalApi = {
+  auth: realAuthApi,
   devices: realDeviceApi,
   home: realHomeApi,
   controls: realControlsApi,

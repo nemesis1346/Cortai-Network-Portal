@@ -1,3 +1,4 @@
+import type { AuthApi } from './authTypes'
 import type { DeviceApi } from './types'
 import type { HomeApi } from './homeTypes'
 import type { ControlsApi } from './controlsTypes'
@@ -23,6 +24,7 @@ import type { TopologyApi } from './topologyTypes'
  * they return an unsubscribe function.
  */
 export interface PortalApi {
+  auth: AuthApi
   devices: DeviceApi
   home: HomeApi
   controls: ControlsApi

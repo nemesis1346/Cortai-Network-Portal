@@ -1,4 +1,5 @@
 import type { PortalApi } from './portalTypes'
+import { mockAuthApi } from './mockAuthApi'
 import { mockDeviceApi } from './mockDeviceApi'
 import { mockHomeApi } from './mockHomeApi'
 import { mockControlsApi } from './mockControlsApi'
@@ -14,6 +15,7 @@ import { mockTopologyApi } from './mockTopologyApi'
  * seeded fixture data is large — this object is the whole mock surface.
  */
 export const mockPortalApi: PortalApi = {
+  auth: mockAuthApi,
   devices: mockDeviceApi,
   home: mockHomeApi,
   controls: mockControlsApi,

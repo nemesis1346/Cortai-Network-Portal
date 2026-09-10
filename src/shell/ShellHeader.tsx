@@ -1,6 +1,7 @@
 import { Avatar, Icon, IconButton } from '@/components/ui-v2'
 import { useClock } from '@/hooks/useClock'
 import { useTheme } from '@/theme/ThemeProvider'
+import { useAuth } from './AuthContext'
 import { useShellStats } from './useShellStats'
 
 interface ShellHeaderProps {
@@ -14,6 +15,7 @@ export function ShellHeader({ title, onOpenAlerts, onOpenQuickAction }: ShellHea
   const clock = useClock()
   const stats = useShellStats()
   const { theme, toggleTheme } = useTheme()
+  const { logout } = useAuth()
 
   return (
     <div className="topbar">
@@ -48,6 +50,9 @@ export function ShellHeader({ title, onOpenAlerts, onOpenQuickAction }: ShellHea
           </IconButton>
           <IconButton variant="default" aria-label="Toggle theme" onClick={toggleTheme}>
             <Icon name={theme === 'light' ? 'moon' : 'sun'} />
+          </IconButton>
+          <IconButton variant="default" aria-label="Log out" onClick={logout}>
+            <Icon name="log-out" />
           </IconButton>
           <Avatar initials="JD" name="Jordan Diaz" />
         </div>

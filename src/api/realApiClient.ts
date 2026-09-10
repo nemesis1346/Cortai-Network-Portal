@@ -5,17 +5,15 @@
  * (see each file's own header comment); confirm with Stefan before flipping
  * VITE_USE_MOCK=false.
  */
+import { getCurrentToken, triggerForcedLogout } from './authSession'
+
 const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ''
 const WS_BASE_URL = import.meta.env.VITE_WS_BASE_URL ?? ''
 export const SITE_ID = import.meta.env.VITE_SITE_ID ?? 'default'
 
-/**
- * Single place to add real authentication once the backend team confirms the
- * mechanism (bearer token, API key, session cookie, ...). No auth env var
- * exists yet in .env.example — currently a no-op.
- */
 function getAuthHeaders(): Record<string, string> {
-  return {}
+  const token = getCurrentToken()
+  return token ? { Authorization: `Bearer ${token}` } : {}
 }
 
 export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T> {
@@ -23,6 +21,10 @@ export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T
     ...init,
     headers: { 'Content-Type': 'application/json', ...getAuthHeaders(), ...init?.headers },
   })
+  if (res.status === 401) {
+    triggerForcedLogout()
+    throw new Error('Session expired')
+  }
   if (!res.ok) {
     throw new Error(`Request to ${path} failed: ${res.status} ${res.statusText}`)
   }
