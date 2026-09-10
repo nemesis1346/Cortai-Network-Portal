@@ -20,10 +20,10 @@ export const ACTIVITY_FEED_POOL: [ActivityEventKind, string][] = [
 
 let activityCounter = 0
 
-/** Simulates a live feed subscription by picking a random pool entry every `intervalMs`. */
+/** Simulates a live feed subscription by cycling the fixed pool in order every `intervalMs`. */
 export function subscribeToActivityFeed(onEvent: (event: ActivityEvent) => void, intervalMs: number): () => void {
   const id = setInterval(() => {
-    const [kind, message_html] = ACTIVITY_FEED_POOL[Math.floor(Math.random() * ACTIVITY_FEED_POOL.length)]
+    const [kind, message_html] = ACTIVITY_FEED_POOL[activityCounter % ACTIVITY_FEED_POOL.length]
     activityCounter += 1
     onEvent({
       id: `evt-${Date.now()}-${activityCounter}`,

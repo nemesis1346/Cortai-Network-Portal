@@ -81,7 +81,7 @@ export interface WanApi {
   getLatencySeries(): Promise<LatencySeries>
   listCloudApps(): Promise<CloudApp[]>
   listIspIncidents(): Promise<IspIncident[]>
-  /** 2s cadence, plain Math.random (not seeded) — meant to feel live, not be reproducible. */
+  /** 2s cadence, fixed value — no measured source yet, see mockWanApi/realWanApi. */
   subscribePrimaryLatency(onTick: (ms: number) => void): () => void
   /** 3s cadence, all 3 apps per tick. */
   subscribeCloudAppLatency(onTick: (id: string, ms: number) => void): () => void

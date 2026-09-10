@@ -285,15 +285,14 @@ function toPublicIntent(intent: InternalIntent): TriageIntent {
 }
 
 function genSnap(): string {
-  return `S-${2200 + Math.floor(Math.random() * 80)}`
+  return `S-${2200 + crCounter}`
 }
 
 const PASS_WORDS = ['Maple', 'Harbour', 'Cedar', 'Summit', 'Lakeside', 'Aurora', 'Granite', 'Birch', 'Juniper', 'Meadow']
 function genPass(): string {
-  const a = PASS_WORDS[Math.floor(Math.random() * PASS_WORDS.length)]
-  let b = PASS_WORDS[Math.floor(Math.random() * PASS_WORDS.length)]
-  while (b === a) b = PASS_WORDS[Math.floor(Math.random() * PASS_WORDS.length)]
-  return `${a}-${b}-${10 + Math.floor(Math.random() * 90)}`
+  const a = PASS_WORDS[crCounter % PASS_WORDS.length]
+  const b = PASS_WORDS[(crCounter + 3) % PASS_WORDS.length]
+  return `${a}-${b}-${10 + (crCounter % 90)}`
 }
 
 /** Seeded from CR_STORE (cortai-network-topology.html:2020-2044) — order preserved exactly as authored. */
@@ -606,7 +605,7 @@ export const mockControlsApi: ControlsApi = {
     if (!policy) throw new Error(`Unknown policy ${key}`)
     policy.on = !policy.on
     const name = POLICY_TOAST_NAME[key] ?? policy.label
-    const pushSeconds = (Math.random() * 4 + 2).toFixed(1)
+    const pushSeconds = '3.2'
     addCr({
       tier: 2,
       badge: 'done',

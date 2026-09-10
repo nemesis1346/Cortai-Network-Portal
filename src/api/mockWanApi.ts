@@ -48,16 +48,16 @@ export const mockWanApi: WanApi = {
 
   subscribePrimaryLatency(onTick) {
     const id = setInterval(() => {
-      onTick(7.6 + Math.random() * 1.6)
+      onTick(8.2)
     }, 2000)
     return () => clearInterval(id)
   },
 
   subscribeCloudAppLatency(onTick) {
     const id = setInterval(() => {
-      onTick('sf', 40 + Math.random() * 7)
-      onTick('pm', 57 + Math.random() * 9)
-      onTick('sn', 200 + Math.random() * 30)
+      onTick('sf', 42)
+      onTick('pm', 61)
+      onTick('sn', 214)
     }, 3000)
     return () => clearInterval(id)
   },
