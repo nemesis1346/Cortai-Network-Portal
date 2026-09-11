@@ -117,15 +117,6 @@ export const mockDeviceApi: DeviceApi = {
     const device = updateDevice(mac, { status: 'quarantined', vlan_current: 'quarantine' })
     return delay({
       device,
-      outcomeMessage: `${displayName(before)} kept in quarantine — no access until approved`,
-    })
-  },
-
-  async block(mac: string): Promise<DeviceActionResult> {
-    const before = findDevice(mac)
-    const device = updateDevice(mac, { status: 'blocked' })
-    return delay({
-      device,
       outcomeMessage: `${displayName(before)} blocked — MAC banned network-wide`,
     })
   },

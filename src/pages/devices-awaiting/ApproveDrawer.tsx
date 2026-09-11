@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import {
   Alert,
   Button,
+  ConfirmDialog,
   Field,
   Icon,
   IconBadge,
@@ -25,9 +26,14 @@ interface ApproveDrawerProps {
   mode: DrawerMode
   onClose: () => void
   onApprove: (body: ApproveRequest) => Promise<void>
-  onQuarantine: () => Promise<void>
   onBlock: () => Promise<void>
   onSave: (body: PatchRequest) => Promise<void>
+}
+
+const BLOCK_CONFIRM = {
+  title: 'Block this device?',
+  description: "This bans the device network-wide via FortiManager. It won't be reachable until you manually reverse this.",
+  confirmLabel: 'Block device',
 }
 
 const OWNER_TYPE_OPTIONS: OwnerType[] = ['staff', 'guest', 'device']
@@ -37,7 +43,6 @@ export function ApproveDrawer({
   mode,
   onClose,
   onApprove,
-  onQuarantine,
   onBlock,
   onSave,
 }: ApproveDrawerProps) {
@@ -46,6 +51,7 @@ export function ApproveDrawer({
   const [vlan, setVlan] = useState<Vlan>('corporate')
   const [notes, setNotes] = useState('')
   const [submitting, setSubmitting] = useState<string | null>(null)
+  const [blockDialogOpen, setBlockDialogOpen] = useState(false)
 
   useEffect(() => {
     if (!device) return
@@ -57,6 +63,7 @@ export function ApproveDrawer({
         : 'corporate',
     )
     setNotes(device.notes ?? '')
+    setBlockDialogOpen(false)
   }, [device])
 
   if (!device) return null
@@ -70,7 +77,10 @@ export function ApproveDrawer({
     }
   }
 
+  const confirmBlock = () => runAction('block', onBlock).then(() => setBlockDialogOpen(false))
+
   return (
+    <>
     <Modal
       open={Boolean(device)}
       onClose={onClose}
@@ -179,21 +189,8 @@ export function ApproveDrawer({
             >
               {submitting === 'approve' ? 'Approving…' : 'Approve & place on network'}
             </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              disabled={submitting !== null}
-              onClick={() => runAction('quarantine', onQuarantine)}
-            >
-              {submitting === 'quarantine' ? 'Quarantining…' : 'Quarantine'}
-            </Button>
-            <Button
-              variant="danger"
-              size="sm"
-              disabled={submitting !== null}
-              onClick={() => runAction('block', onBlock)}
-            >
-              {submitting === 'block' ? 'Blocking…' : 'Block permanently'}
+            <Button variant="danger" size="sm" disabled={submitting !== null} onClick={() => setBlockDialogOpen(true)}>
+              Block
             </Button>
           </>
         ) : (
@@ -212,5 +209,16 @@ export function ApproveDrawer({
         )}
       </ModalFoot>
     </Modal>
+
+    <ConfirmDialog
+      open={blockDialogOpen}
+      title={BLOCK_CONFIRM.title}
+      description={BLOCK_CONFIRM.description}
+      confirmLabel={BLOCK_CONFIRM.confirmLabel}
+      confirming={submitting === 'block'}
+      onCancel={() => setBlockDialogOpen(false)}
+      onConfirm={confirmBlock}
+    />
+    </>
   )
 }

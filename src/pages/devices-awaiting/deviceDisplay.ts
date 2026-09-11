@@ -1,17 +1,15 @@
 import type { Device, DeviceStatus } from '@/api'
 
-const STATUS_BADGE_VARIANT: Record<DeviceStatus, 'amber' | 'success' | 'neutral' | 'danger'> = {
+const STATUS_BADGE_VARIANT: Record<DeviceStatus, 'amber' | 'success' | 'neutral'> = {
   awaiting: 'amber',
   approved: 'success',
   quarantined: 'neutral',
-  blocked: 'danger',
 }
 
 const STATUS_LABEL: Record<DeviceStatus, string> = {
   awaiting: 'Awaiting',
   approved: 'Approved',
   quarantined: 'Quarantined',
-  blocked: 'Blocked',
 }
 
 export function statusBadgeVariant(status: DeviceStatus) {

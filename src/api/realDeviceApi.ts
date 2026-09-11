@@ -32,12 +32,6 @@ export const realDeviceApi: DeviceApi = {
     })
   },
 
-  block(mac: string) {
-    return apiRequest<DeviceActionResult>(`/api/devices/${encodeURIComponent(mac)}/block`, {
-      method: 'POST',
-    })
-  },
-
   patch(mac: string, body: PatchRequest) {
     return apiRequest<DeviceActionResult>(`/api/devices/${encodeURIComponent(mac)}`, {
       method: 'PATCH',

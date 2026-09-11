@@ -10,6 +10,7 @@ import {
   CardBody,
   CardHeader,
   CardTitle,
+  ConfirmDialog,
   FeedItem,
   Icon,
   IconBadge,
@@ -21,9 +22,17 @@ interface AwaitingMiniCardProps {
   onNavigate: (tab: string) => void
 }
 
+const BLOCK_CONFIRM = {
+  title: 'Block this device?',
+  description: "This bans the device network-wide via FortiManager. It won't be reachable until you manually reverse this.",
+  confirmLabel: 'Block device',
+}
+
 export function AwaitingMiniCard({ onNavigate }: AwaitingMiniCardProps) {
   const [devices, setDevices] = useState<Device[] | null>(null)
   const [infoOpen, setInfoOpen] = useState(false)
+  const [pendingBlockMac, setPendingBlockMac] = useState<string | null>(null)
+  const [blocking, setBlocking] = useState(false)
   const { show: showToast } = useToast()
 
   const load = useCallback(() => {
@@ -34,11 +43,17 @@ export function AwaitingMiniCard({ onNavigate }: AwaitingMiniCardProps) {
 
   if (!devices || devices.length === 0) return null
 
-  const block = (mac: string) => {
-    portalApi.devices.block(mac).then((result) => {
-      showToast(result.outcomeMessage)
-      load()
-    })
+  const runBlock = () => {
+    if (!pendingBlockMac) return
+    setBlocking(true)
+    portalApi.devices
+      .quarantine(pendingBlockMac)
+      .then((result) => {
+        showToast(result.outcomeMessage)
+        setPendingBlockMac(null)
+        load()
+      })
+      .finally(() => setBlocking(false))
   }
 
   return (
@@ -80,7 +95,7 @@ export function AwaitingMiniCard({ onNavigate }: AwaitingMiniCardProps) {
                     <Button variant="primary" size="xs" onClick={() => onNavigate('network')}>
                       Review
                     </Button>
-                    <Button variant="danger" size="xs" onClick={() => block(device.mac)}>
+                    <Button variant="danger" size="xs" onClick={() => setPendingBlockMac(device.mac)}>
                       Block
                     </Button>
                   </span>
@@ -108,6 +123,16 @@ export function AwaitingMiniCard({ onNavigate }: AwaitingMiniCardProps) {
           }
         />
       </Modal>
+
+      <ConfirmDialog
+        open={pendingBlockMac !== null}
+        title={BLOCK_CONFIRM.title}
+        description={BLOCK_CONFIRM.description}
+        confirmLabel={BLOCK_CONFIRM.confirmLabel}
+        confirming={blocking}
+        onCancel={() => setPendingBlockMac(null)}
+        onConfirm={runBlock}
+      />
     </>
   )
 }

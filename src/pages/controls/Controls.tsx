@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Badge, Card, CardHeader, CardTitle } from '@/components/ui-v2'
 import { useToast } from '@/components/ui'
-import { portalApi, type ChangeRecord, type TriageResult } from '@/api'
+import { portalApi, type ChangeRecord, type GuardTier, type TriageResult } from '@/api'
 import type { ScreenProps } from '@/shell/nav-data'
 import { BlockAndPauseCard } from './BlockAndPauseCard'
 import { ChangeDetailModal } from './ChangeDetailModal'
@@ -21,6 +21,7 @@ export function Controls(_props: ScreenProps) {
 
   const [changes, setChanges] = useState<ChangeRecord[] | null>(null)
   const [detailNum, setDetailNum] = useState<number | null>(null)
+  const [tierFilter, setTierFilter] = useState<GuardTier | null>(null)
 
   const { show: showToast } = useToast()
 
@@ -125,7 +126,11 @@ export function Controls(_props: ScreenProps) {
             <span className="spacer" />
             <Badge variant="neutral">Guardian Triage · Four-Tier Model</Badge>
           </CardHeader>
-          <TierRail activeTier={triage?.tier ?? null} />
+          <TierRail
+            activeTier={triage?.tier ?? null}
+            selectedTier={tierFilter}
+            onSelectTier={(t) => setTierFilter((cur) => (cur === t ? null : t))}
+          />
           <TrySuggestions onPick={pickSuggestion} submitting={triaging} />
           {triage && (
             <GuardianReplyCard
@@ -157,7 +162,12 @@ export function Controls(_props: ScreenProps) {
         <div className="stack stack--split">
           <BlockAndPauseCard onChanged={reloadChanges} />
         </div>
-        <RecentChangesCard changes={changes} onOpen={setDetailNum} />
+        <RecentChangesCard
+          changes={changes}
+          onOpen={setDetailNum}
+          filterTier={tierFilter}
+          onClearFilter={() => setTierFilter(null)}
+        />
       </div>
 
       <ChangeDetailModal record={detailRecord} onClose={() => setDetailNum(null)} onReverse={handleReverse} />

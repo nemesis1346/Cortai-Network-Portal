@@ -1,4 +1,4 @@
-export type DeviceStatus = 'awaiting' | 'approved' | 'quarantined' | 'blocked'
+export type DeviceStatus = 'awaiting' | 'approved' | 'quarantined'
 
 export type Vlan = 'corporate' | 'staff' | 'front-desk' | 'guest' | 'quarantine'
 
@@ -60,7 +60,6 @@ export interface DeviceApi {
   list(params: ListDevicesParams): Promise<Device[]>
   approve(mac: string, body: ApproveRequest): Promise<DeviceActionResult>
   quarantine(mac: string): Promise<DeviceActionResult>
-  block(mac: string): Promise<DeviceActionResult>
   patch(mac: string, body: PatchRequest): Promise<DeviceActionResult>
 }
 

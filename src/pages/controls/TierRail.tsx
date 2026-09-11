@@ -7,11 +7,24 @@ const TIERS: { t: GuardTier; title: string; desc: string }[] = [
   { t: 4, title: 'Tier 4 · Human only', desc: 'Physical work, incidents, protected objects — never AI' },
 ]
 
-export function TierRail({ activeTier }: { activeTier: GuardTier | null }) {
+interface TierRailProps {
+  activeTier: GuardTier | null
+  selectedTier?: GuardTier | null
+  onSelectTier?: (tier: GuardTier) => void
+}
+
+export function TierRail({ activeTier, selectedTier, onSelectTier }: TierRailProps) {
   return (
     <div className="grid-4 tier-row">
       {TIERS.map(({ t, title, desc }) => (
-        <button key={t} type="button" className={`tier tier--${t}`} aria-current={activeTier === t ? 'true' : undefined}>
+        <button
+          key={t}
+          type="button"
+          className={`tier tier--${t}${selectedTier === t ? ' tier--selected' : ''}`}
+          aria-current={activeTier === t ? 'true' : undefined}
+          aria-pressed={selectedTier === t}
+          onClick={() => onSelectTier?.(t)}
+        >
           <b>{title}</b>
           <p>{desc}</p>
         </button>

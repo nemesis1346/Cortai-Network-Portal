@@ -131,7 +131,7 @@ const REQUIRED_TOKENS = [
 //        static descriptive copy with legitimate numbers ("under 10 seconds", "Pause 1 h")
 //        that have nothing to do with live app state — extending the digit ban there would
 //        just be noise, not a real guardrail.
-const DEVICE_MUTATING_METHODS = ['approve', 'quarantine', 'block', 'patch']
+const DEVICE_MUTATING_METHODS = ['approve', 'quarantine', 'patch']
 const CONTROLS_MUTATING_METHODS = [
   'runChange',
   'scheduleChange',
@@ -149,7 +149,7 @@ const OUTCOME_WORDS = /\b(Approved|Blocked|Quarantined|placed on|banned network-
 function checkPageFile(filePath) {
   const relPath = filePath.slice(ROOT.length + 1)
   const text = readFileSync(filePath, 'utf8')
-  const usesDeviceApi = /\bportalApi\.devices\.(list|approve|quarantine|block|patch)\b/.test(text)
+  const usesDeviceApi = /\bportalApi\.devices\.(list|approve|quarantine|patch)\b/.test(text)
   const usesControlsApi = /\bportalApi\.controls\.\w+\b/.test(text)
   if (!usesDeviceApi && !usesControlsApi) return // presentational-only file, exempt
 

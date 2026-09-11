@@ -5,6 +5,8 @@ import { CHANGE_BADGE_LABEL, type ChangeBadge, type ChangeRecord, type GuardTier
 interface RecentChangesCardProps {
   changes: ChangeRecord[] | null
   onOpen: (num: number) => void
+  filterTier?: GuardTier | null
+  onClearFilter?: () => void
 }
 
 const TIER_VARIANT: Record<GuardTier, 'accent' | 'info' | 'amber' | 'violet'> = {
@@ -24,8 +26,9 @@ const STATUS_VARIANT: Record<ChangeBadge, 'success' | 'info' | 'amber' | 'danger
   blk: 'danger',
 }
 
-export function RecentChangesCard({ changes, onOpen }: RecentChangesCardProps) {
+export function RecentChangesCard({ changes, onOpen, filterTier, onClearFilter }: RecentChangesCardProps) {
   const [infoOpen, setInfoOpen] = useState(false)
+  const visibleChanges = filterTier ? (changes ?? []).filter((c) => c.tier === filterTier) : changes
 
   return (
     <Card>
@@ -35,12 +38,17 @@ export function RecentChangesCard({ changes, onOpen }: RecentChangesCardProps) {
           <Icon name="info" />
         </IconButton>
         <span className="spacer" />
+        {filterTier && (
+          <Badge variant={TIER_VARIANT[filterTier]} size="sm" onRemove={onClearFilter} removeLabel="Clear tier filter">
+            Filtered: Tier {filterTier}
+          </Badge>
+        )}
       </CardHeader>
       <CardBody>
-        {!changes ? (
+        {!visibleChanges ? (
           <p className="t-body-sm c-tertiary">Loading…</p>
         ) : (
-          changes.map((rec) => (
+          visibleChanges.map((rec) => (
             <button
               key={rec.num}
               type="button"
