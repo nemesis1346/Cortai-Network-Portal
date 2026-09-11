@@ -11,7 +11,12 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ENV_FILE="${SCRIPT_DIR}/../../.env"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+# Anchor every relative path below (EC2_KEY, dist/, npm's package.json lookup) to the
+# repo root regardless of which directory this script is invoked from.
+cd "$REPO_ROOT"
+
+ENV_FILE="${REPO_ROOT}/.env"
 if [[ -f "$ENV_FILE" ]]; then
   set -a
   # shellcheck disable=SC1090
